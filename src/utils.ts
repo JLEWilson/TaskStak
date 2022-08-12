@@ -1,3 +1,27 @@
+import type { NativeStackScreenProps } from "@react-navigation/native-stack"
+
+const TimeOfDay = {
+  Morning: "Morning",
+  Afternoon: "Afternoon",
+  Evening: "Evening",
+  Night: "Night",
+}
+type Task = {
+  description: string
+  priority?: number
+  Time?: string
+}
+type RootStackParamList = {
+  Home: undefined
+  TaskList: undefined
+}
+
+export type NavigatorProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Home",
+  "TaskList"
+>
+
 export const addNumbers = (...args: number[]): number => {
   return args.reduce(
     (runningTotal, currentValue) => runningTotal + currentValue,
