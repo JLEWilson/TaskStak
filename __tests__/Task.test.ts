@@ -27,5 +27,37 @@ describe("getTask", () => {
     expect(result).toEqual(myTask)
   })
 })
-describe("createTask", () => {})
-describe("deleteTask", () => {})
+describe("createTask", () => {
+  test("if no task exists, add the task", async () => {
+    const myTask: Task = {
+      id: "test_id",
+      description: "this is a task for testing",
+      priority: 1,
+      timeOfDay: TIME_OF_DAY.Morning,
+    }
+    await createTask(myTask)
+
+    const result = await getTask(myTask.id)
+    expect(result).toEqual(myTask)
+  })
+})
+
+describe("deleteTask", () => {
+  test("if the task with that id exists in AsyncStorage, delete it", async () => {
+    const myTask: Task = {
+      id: "test_id",
+      description: "this is a task for testing",
+      priority: 1,
+      timeOfDay: TIME_OF_DAY.Morning,
+    }
+    await createTask(myTask)
+
+    const result = await getTask(myTask.id)
+    expect(result).toEqual(myTask)
+
+    deleteTask(myTask.id)
+
+    const deletedResult = await getTask(myTask.id)
+    expect(deletedResult).toEqual(null)
+  })
+})
