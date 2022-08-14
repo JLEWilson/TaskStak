@@ -12,6 +12,20 @@ describe("getTask", () => {
     const result = await getTask("fakekey")
     expect(result).toEqual(null)
   })
+
+  test("returns a task by id", async () => {
+    const myTask: Task = {
+      id: "test_id",
+      description: "this is a task for testing",
+      priority: 1,
+      timeOfDay: TIME_OF_DAY.Morning,
+    }
+    const taskString = JSON.stringify(myTask)
+    await AsyncStorage.setItem(myTask.id, taskString)
+
+    const result = await getTask(myTask.id)
+    expect(result).toEqual(myTask)
+  })
 })
 describe("createTask", () => {})
 describe("deleteTask", () => {})

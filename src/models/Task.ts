@@ -15,9 +15,14 @@ export const createTask = async (task: Task): Promise<void> => {
   }
 }
 
-export const getTask = async (id: Task["id"]): Promise<string | null> => {
+export const getTask = async (id: Task["id"]): Promise<Task | null> => {
   try {
-    return await A.getItem(id)
+    const result = await A.getItem(id)
+    if (result) {
+      return JSON.parse(result) as Task
+    }
+
+    return null
   } catch (err) {
     throw err
   }
