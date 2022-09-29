@@ -36,8 +36,12 @@ export const getAllTasks = async () => {
   try {
     const keys = await A.getAllKeys()
     const result = await A.multiGet(keys)
+    const resultsWithValues: Task[] = []
     if (result && result.length >= 1) {
-      return result.map((req) => (req[1] ? (JSON.parse(req[1]) as Task) : null))
+      result.map((req) =>
+        req[1] ? resultsWithValues.push(JSON.parse(req[1]) as Task) : null,
+      )
+      return resultsWithValues
     }
     return null
   } catch (err) {
