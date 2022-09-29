@@ -1,22 +1,11 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TextInput,
-  Switch,
-} from "react-native"
+import { View, Text, StyleSheet, Pressable } from "react-native"
+import NewTaskForm, { RADIO_OPTIONS } from "../components/NewTaskForm"
 import Modal from "react-native-modal"
 import React from "react"
-import { v4 as uuidv4 } from "uuid"
-import type { NavigatorProps } from "../utils"
 import { useTheme } from "@react-navigation/native"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Radio from "../components/Radio"
-import MultiSlider from "@ptomasroos/react-native-multi-slider"
-import { createTask } from "../models/task"
-import type { Task } from "../models/task"
-import { create } from "react-test-renderer"
+import { getAllTasks } from "../models/Task"
+import type { Task } from "../models/Task"
 
 const styles = StyleSheet.create({
   container: {
@@ -26,25 +15,6 @@ const styles = StyleSheet.create({
   header: {
     textAlign: "center",
     marginTop: 25,
-  },
-  text: {
-    textAlign: "center",
-  },
-  button: {
-    marginTop: "auto",
-    marginBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgb(150, 150, 200)",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-  },
-  cancel: {
-    marginLeft: 5,
-    marginTop: 5,
-    marginRight: "auto",
   },
   add: {
     position: "absolute",
@@ -65,46 +35,86 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     borderWidth: 2,
   },
-  textInput: {
-    borderWidth: 3,
+  task: {
+    backgroundColor: "gray",
   },
 })
-const RADIO_OPTIONS = ["Any", "Morning", "Afternoon", "Evening", "Night"]
-const TaskList = ({ navigation }: NavigatorProps) => {
+
+const testTasks: Task[] = [
+  {
+    id: "base",
+    description: "task1",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[0],
+    repeating: true,
+  },
+  {
+    id: "morning_1",
+    description: "task2",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[1],
+    repeating: true,
+  },
+  {
+    id: "morning_2",
+    description: "task3",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[1],
+    repeating: true,
+  },
+  {
+    id: "morning_3",
+    description: "task4",
+    completed: false,
+    priority: 1,
+    timeOfDay: RADIO_OPTIONS[1],
+    repeating: true,
+  },
+  {
+    id: "morning_4",
+    description: "task5",
+    completed: false,
+    priority: 2,
+    timeOfDay: RADIO_OPTIONS[1],
+    repeating: true,
+  },
+  {
+    id: "afternoon_1",
+    description: "task6",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[2],
+    repeating: true,
+  },
+  {
+    id: "afternoon_2",
+    description: "task7",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[2],
+    repeating: true,
+  },
+  {
+    id: "afternoon_3",
+    description: "task8",
+    completed: false,
+    timeOfDay: RADIO_OPTIONS[2],
+    repeating: true,
+  },
+]
+const TaskList = () => {
   const { colors } = useTheme()
-  const [description, setDescription] = React.useState("Task To Do")
-  const [checked, setChecked] = React.useState(0)
-  const [radioInput, setRadioInput] = React.useState("Any")
-  const [priority, setPriority] = React.useState(0)
+
   const [isModalVisible, setModalVisible] = React.useState(false)
-  const [isRepeating, setIsRepeating] = React.useState(true)
-  const [isRadioVisible, setRadioVisible] = React.useState(false)
-  const [isPriorityVisible, setPriorityVisible] = React.useState(false)
+  const [tasks, setTasks] = React.useState<Task[]>([])
 
-  const formResetHandler = () => {
-    // Clean this by using a Reducer
-    setModalVisible(false)
-    setIsRepeating(true)
-    setRadioVisible(false)
-    setChecked(0)
-    setPriorityVisible(false)
-    setPriority(0)
-  }
-  const formSubmitHandler = () => {
-    const timeOfDayInput = isRadioVisible ? radioInput : undefined
-    const priorityInput = isPriorityVisible ? priority : undefined
-
-    const task: Task = {
-      id: uuidv4(),
-      description: description,
-      completed: false,
-      priority: priorityInput,
-      timeOfDay: timeOfDayInput,
-      repeating: isRepeating,
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllTasks()
+      if (data) {
+        setTasks(data)
+      } else setTasks(testTasks)
     }
-    createTask(task)
-    formResetHandler()
-  }
+    const result = fetchData().catch(console.error)
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -116,81 +126,13 @@ const TaskList = ({ navigation }: NavigatorProps) => {
         ]}
         isVisible={isModalVisible}
       >
-        <Pressable onPress={() => formResetHandler()} style={styles.cancel}>
-          <Icon name="close" color="#900" size={30} />
-        </Pressable>
-        <Text style={[styles.text, { color: colors.text }]}>Task Details</Text>
-        <TextInput
-          style={[styles.textInput, { borderColor: colors.border }]}
-          defaultValue="Task To Do"
-          onChangeText={(text) => setDescription(text)}
-        />
-        <View style={{ flexDirection: "row" }}>
-          <Text>Time of Day</Text>
-          <Switch
-            value={isRadioVisible}
-            onValueChange={(value) => setRadioVisible(value)}
-          />
-        </View>
-        {isRadioVisible && (
-          <Radio
-            category="Time of Day"
-            options={RADIO_OPTIONS}
-            checked={checked}
-            setChecked={setChecked}
-            setRadioInput={setRadioInput}
-          />
-        )}
-        <View style={{ flexDirection: "row" }}>
-          <Text>Task Priority Level</Text>
-          <Switch
-            value={isPriorityVisible}
-            onValueChange={(value) => setPriorityVisible(value)}
-          />
-        </View>
-        {isPriorityVisible && (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <MultiSlider
-              onValuesChange={(value) => setPriority(value[0])}
-              min={0}
-              max={10}
-              step={1}
-              sliderLength={200}
-              markerStyle={{ width: 20, height: 20 }}
-              pressedMarkerStyle={{ width: 30, height: 30 }}
-              snapped={true}
-            />
-            <Text
-              style={{
-                backgroundColor: colors.notification,
-                textAlign: "center",
-                width: 30,
-                height: 30,
-                paddingTop: 5,
-                borderRadius: 15,
-              }}
-            >
-              {priority}
-            </Text>
-          </View>
-        )}
-        <View style={{ flexDirection: "row" }}>
-          <Text>Repeat Task Daily</Text>
-          <Switch
-            value={isRepeating}
-            onValueChange={(value) => setIsRepeating(value)}
-          />
-        </View>
-        <Pressable style={styles.button} onPress={() => formSubmitHandler()}>
-          <Text style={[styles.text, { color: colors.text }]}>Add new Task</Text>
-        </Pressable>
+        <NewTaskForm setModalVisible={setModalVisible}></NewTaskForm>
       </Modal>
+      {tasks.map((task, index) => (
+        <View key={task.id} style={styles.task}>
+          <Text style={{ color: colors.text }}>{task.description}</Text>
+        </View>
+      ))}
       <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
         <Icon name="add" size={30} />
       </Pressable>
