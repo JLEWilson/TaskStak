@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import type { Task } from "../src/models/task"
+import type { Task } from "../src/models/Task.Server"
 import { TIME_OF_DAY } from "../src/utils"
-import { createTask, getTask, deleteTask } from "../src/models/task"
+import { createTask, getTask, deleteTask } from "../src/models/Task.Server"
 
 beforeEach(async () => {
   await AsyncStorage.clear()

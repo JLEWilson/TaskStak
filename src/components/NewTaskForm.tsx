@@ -11,8 +11,8 @@ import MultiSlider from "@ptomasroos/react-native-multi-slider"
 import Radio from "./Radio"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
-import type { Task } from "../models/Task"
-import { createTask } from "../models/Task"
+import type { Task } from "../models/Task.Server"
+import { createTask } from "../models/Task.Server"
 import { v4 as uuidv4 } from "uuid"
 
 interface NewTaskFormProps {

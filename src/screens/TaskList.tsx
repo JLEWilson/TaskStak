@@ -4,8 +4,8 @@ import Modal from "react-native-modal"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import { getAllTasks } from "../models/Task"
-import type { Task } from "../models/Task"
+import { getAllTasks } from "../models/Task.Server"
+import type { Task } from "../models/Task.Server"
 
 const styles = StyleSheet.create({
   container: {
