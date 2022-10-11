@@ -25,7 +25,10 @@ export default function App() {
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
-          tabBarStyle: { backgroundColor: MyTheme.colors.primary },
+          tabBarStyle: {
+            backgroundColor: MyTheme.colors.primary,
+            height: 60,
+          },
         }}
       >
         <Tab.Screen
