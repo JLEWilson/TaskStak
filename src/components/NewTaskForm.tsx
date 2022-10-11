@@ -15,12 +15,31 @@ import type { Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
 import { v4 as uuidv4 } from "uuid"
 
-interface NewTaskFormProps {
+interface TaskFormProps {
   setModalVisible: (bool: boolean) => void
+  taskToEdit?: Task
 }
 const styles = StyleSheet.create({
-  text: {
-    textAlign: "center",
+  header: {
+    marginVertical: 10,
+    fontSize: 20,
+  },
+  propertyContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: "auto",
+    backgroundColor: "blue",
+  },
+  innerContainer: {
+    marginVertical: "auto",
+    display: "flex",
+    gap: "2",
+    height: "100%",
+    width: "70%",
+    backgroundColor: "red",
+  },
+  label: {
+    fontSize: 18,
   },
   button: {
     marginTop: "auto",
@@ -33,10 +52,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
   },
+  buttonText: {
+    fontSize: 18,
+  },
   cancel: {
-    marginLeft: 5,
-    marginTop: 5,
-    marginRight: "auto",
+    position: "absolute",
+    left: 5,
+    top: 5,
   },
   add: {
     position: "absolute",
@@ -47,30 +69,50 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
   },
-  modal: {
+  container: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 150,
-    marginHorizontal: 0,
-    marginBottom: 0,
-    borderRadius: 5,
-    borderStyle: "solid",
-    borderWidth: 2,
+    width: "100%",
+    height: "100%",
   },
   textInput: {
     borderWidth: 3,
+    width: 220,
+    textAlign: "center",
   },
 })
 export const RADIO_OPTIONS = ["Any", "Morning", "Afternoon", "Evening", "Night"]
-const NewTaskForm: React.FC<NewTaskFormProps> = (props) => {
+const TaskForm: React.FC<TaskFormProps> = (props) => {
   const { colors } = useTheme()
-  const [description, setDescription] = React.useState("Task To Do")
-  const [checked, setChecked] = React.useState(0)
-  const [radioInput, setRadioInput] = React.useState("Any")
-  const [priority, setPriority] = React.useState(0)
-  const [isRepeating, setIsRepeating] = React.useState(true)
-  const [isRadioVisible, setRadioVisible] = React.useState(false)
-  const [isPriorityVisible, setPriorityVisible] = React.useState(false)
+  const [description, setDescription] = React.useState(
+    props.taskToEdit ? props.taskToEdit?.description : "Do The Dishes",
+  )
+  const [checked, setChecked] = React.useState(
+    props.taskToEdit
+      ? RADIO_OPTIONS.findIndex((e) => e === props.taskToEdit?.timeOfDay)
+      : 0,
+  )
+  const [radioInput, setRadioInput] = React.useState(
+    props.taskToEdit && props.taskToEdit.timeOfDay
+      ? props.taskToEdit.timeOfDay
+      : "Any",
+  )
+  const [priority, setPriority] = React.useState(
+    props.taskToEdit?.priority !== undefined
+      ? props.taskToEdit.priority
+      : undefined,
+  )
+  const [isRepeating, setIsRepeating] = React.useState(
+    props.taskToEdit ? props.taskToEdit.repeating : false,
+  )
+  const [isRadioVisible, setRadioVisible] = React.useState(
+    props.taskToEdit && props.taskToEdit.timeOfDay != RADIO_OPTIONS[0]
+      ? true
+      : false,
+  )
+  const [isPriorityVisible, setPriorityVisible] = React.useState(
+    props.taskToEdit && props.taskToEdit.priority !== undefined ? true : false,
+  )
 
   const formResetHandler = () => {
     props.setModalVisible(false)
@@ -97,82 +139,95 @@ const NewTaskForm: React.FC<NewTaskFormProps> = (props) => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Pressable onPress={() => formResetHandler()} style={styles.cancel}>
         <Icon name="close" color="#900" size={30} />
       </Pressable>
-      <Text style={[styles.text, { color: colors.text }]}>Task Details</Text>
-      <TextInput
-        style={[styles.textInput, { borderColor: colors.border }]}
-        defaultValue="Task To Do"
-        onChangeText={(text) => setDescription(text)}
-      />
-      <View style={{ flexDirection: "row" }}>
-        <Text>Time of Day</Text>
-        <Switch
-          value={isRadioVisible}
-          onValueChange={(value) => setRadioVisible(value)}
-        />
-      </View>
-      {isRadioVisible && (
-        <Radio
-          category="Time of Day"
-          options={RADIO_OPTIONS}
-          checked={checked}
-          setChecked={setChecked}
-          setRadioInput={setRadioInput}
-        />
-      )}
-      <View style={{ flexDirection: "row" }}>
-        <Text>Task Priority Level</Text>
-        <Switch
-          value={isPriorityVisible}
-          onValueChange={(value) => setPriorityVisible(value)}
-        />
-      </View>
-      {isPriorityVisible && (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <MultiSlider
-            onValuesChange={(value) => setPriority(value[0])}
-            min={0}
-            max={10}
-            step={1}
-            sliderLength={200}
-            markerStyle={{ width: 20, height: 20 }}
-            pressedMarkerStyle={{ width: 30, height: 30 }}
-            snapped={true}
+      <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
+      <View style={styles.innerContainer}>
+        <View>
+          <Text style={[styles.label, { color: colors.text }]}>Description</Text>
+          <TextInput
+            style={[styles.textInput, { borderColor: colors.border }]}
+            defaultValue={description}
+            maxLength={20}
+            onChangeText={(text) => setDescription(text)}
           />
-          <Text
+        </View>
+        <View style={styles.propertyContainer}>
+          <Text style={[styles.label, { color: colors.text }]}>Time of Day</Text>
+          <Switch
+            value={isRadioVisible}
+            onValueChange={(value) => setRadioVisible(value)}
+          />
+        </View>
+        {isRadioVisible && (
+          <Radio
+            category="Time of Day"
+            options={RADIO_OPTIONS}
+            checked={checked}
+            setChecked={setChecked}
+            setRadioInput={setRadioInput}
+          />
+        )}
+        <View style={styles.propertyContainer}>
+          <Text style={[styles.label, { color: colors.text }]}>
+            Task Priority Level
+          </Text>
+          <Switch
+            value={isPriorityVisible}
+            onValueChange={(value) => setPriorityVisible(value)}
+          />
+        </View>
+        {isPriorityVisible && (
+          <View
             style={{
-              backgroundColor: colors.notification,
-              textAlign: "center",
-              width: 30,
-              height: 30,
-              paddingTop: 5,
-              borderRadius: 15,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            {priority}
+            <MultiSlider
+              onValuesChange={(value) => setPriority(value[0])}
+              values={priority ? [priority] : [0]}
+              min={0}
+              max={10}
+              step={1}
+              sliderLength={200}
+              markerStyle={{ width: 20, height: 20 }}
+              pressedMarkerStyle={{ width: 30, height: 30 }}
+              snapped={true}
+            />
+            <Text
+              style={{
+                backgroundColor: colors.notification,
+                textAlign: "center",
+                width: 30,
+                height: 30,
+                paddingTop: 5,
+                borderRadius: 15,
+              }}
+            >
+              {priority}
+            </Text>
+          </View>
+        )}
+        <View style={styles.propertyContainer}>
+          <Text style={[styles.label, { color: colors.text }]}>
+            Repeat Task Daily
           </Text>
+          <Switch
+            value={isRepeating}
+            onValueChange={(value) => setIsRepeating(value)}
+          />
         </View>
-      )}
-      <View style={{ flexDirection: "row" }}>
-        <Text>Repeat Task Daily</Text>
-        <Switch
-          value={isRepeating}
-          onValueChange={(value) => setIsRepeating(value)}
-        />
       </View>
       <Pressable style={styles.button} onPress={() => formSubmitHandler()}>
-        <Text style={[styles.text, { color: colors.text }]}>Add new Task</Text>
+        <Text style={[styles.buttonText, { color: colors.text }]}>
+          Add new Task
+        </Text>
       </Pressable>
     </View>
   )
 }
-export default NewTaskForm
+export default TaskForm
