@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native"
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native"
 import NewTaskForm, { RADIO_OPTIONS } from "../components/NewTaskForm"
 import Modal from "react-native-modal"
 import React from "react"
@@ -6,6 +6,7 @@ import { useTheme } from "@react-navigation/native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { getAllTasks } from "../models/Task.Server"
 import type { Task } from "../models/Task.Server"
+import TaskItem from "../components/TaskItem"
 
 const styles = StyleSheet.create({
   container: {
@@ -18,22 +19,27 @@ const styles = StyleSheet.create({
   },
   add: {
     position: "absolute",
-    bottom: 20,
-    left: 0,
-    right: 0,
+    bottom: 8,
+    left: 150,
+    right: 150,
+    backgroundColor: "blue",
+    borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
   },
   modal: {
-    justifyContent: "center",
-    alignItems: "center",
     marginTop: 150,
     marginHorizontal: 0,
     marginBottom: 0,
     borderRadius: 5,
     borderStyle: "solid",
     borderWidth: 2,
+    padding: 0,
+  },
+  taskContainer: {
+    marginTop: 5,
+    marginBottom: 0,
   },
   task: {
     backgroundColor: "gray",
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
 const testTasks: Task[] = [
   {
     id: "base",
-    description: "task1",
+    description: "aReallyLongDescripti",
     completed: false,
     timeOfDay: RADIO_OPTIONS[0],
     repeating: true,
@@ -100,11 +106,12 @@ const testTasks: Task[] = [
     repeating: true,
   },
 ]
+
 const TaskList = () => {
   const { colors } = useTheme()
-
   const [isModalVisible, setModalVisible] = React.useState(false)
   const [tasks, setTasks] = React.useState<Task[]>([])
+  const [taskToEdit, setTaskToEdit] = React.useState<Task | undefined>(undefined)
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -126,15 +133,23 @@ const TaskList = () => {
         ]}
         isVisible={isModalVisible}
       >
-        <NewTaskForm setModalVisible={setModalVisible}></NewTaskForm>
+        <NewTaskForm
+          setModalVisible={setModalVisible}
+          taskToEdit={taskToEdit}
+        ></NewTaskForm>
       </Modal>
-      {tasks.map((task, index) => (
-        <View key={task.id} style={styles.task}>
-          <Text style={{ color: colors.text }}>{task.description}</Text>
-        </View>
-      ))}
+      <ScrollView style={styles.taskContainer}>
+        {tasks.map((task, index) => (
+          <TaskItem
+            task={task}
+            key={index}
+            setModalVisible={setModalVisible}
+            setTaskToEdit={setTaskToEdit}
+          />
+        ))}
+      </ScrollView>
       <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
-        <Icon name="add" size={30} />
+        <Icon name="add" size={30} color="white" />
       </Pressable>
     </View>
   )
