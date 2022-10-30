@@ -9,12 +9,12 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 const MyTheme = {
   dark: true,
   colors: {
-    primary: "rgb(178, 170, 170)",
-    background: "black",
-    card: "rgb(178, 170, 170)",
-    text: "white",
-    border: "rgb(199, 199, 204)",
-    notification: "rgb(255, 69, 58)",
+    primary: "#e2fcc7", //Buttons and form Inputs
+    background: "#abced9",
+    card: "#faf5c0", //TaskBackground
+    text: "#170f33",
+    border: "#152109", //Form Text
+    notification: "#fcd4e4", //Modal Background
   },
 }
 const Tab = createBottomTabNavigator()
