@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: "auto",
+    marginTop: 15,
   },
   innerContainer: {
     marginVertical: "auto",
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgb(150, 150, 200)",
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 4,
@@ -94,9 +94,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   const [startTime, setStartTime] = React.useState(time ? time.startTime : null)
   const [endTime, setEndTime] = React.useState(time ? time.endTime : null)
   const [priority, setPriority] = React.useState(
-    props.taskToEdit?.priority !== undefined
-      ? props.taskToEdit.priority
-      : undefined,
+    props.taskToEdit?.priority !== undefined ? props.taskToEdit.priority : 0,
   )
   const [weekdays, setWeekdays] = React.useState(
     props.taskToEdit ? props.taskToEdit.weekdays : [-1],
@@ -138,16 +136,18 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.notification }]}>
       <Pressable onPress={() => formResetHandler()} style={styles.cancel}>
         <Icon name="close" color="#900" size={30} />
       </Pressable>
       <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
       <View style={styles.innerContainer}>
-        <View>
-          <Text style={[styles.label, { color: colors.text }]}>Description</Text>
+        <View style={{ marginTop: 15 }}>
+          <Text style={[styles.label, { color: colors.border }]}>
+            Description
+          </Text>
           <TextInput
-            style={[styles.textInput, { borderColor: colors.border }]}
+            style={[styles.textInput, { backgroundColor: colors.primary }]}
             defaultValue={description}
             maxLength={20}
             onChangeText={(text) => setDescription(text)}
@@ -156,6 +156,8 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
         <View style={styles.propertyContainer}>
           <Text style={[styles.label, { color: colors.text }]}>Time of Day</Text>
           <Switch
+            thumbColor={colors.primary}
+            trackColor={{ false: colors.border, true: colors.primary }}
             value={isTimeRangeVisible}
             onValueChange={(value) => setTimeRangeVisible(value)}
           />
@@ -169,10 +171,12 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           />
         )}
         <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.text }]}>
+          <Text style={[styles.label, { color: colors.border }]}>
             Task Priority Level
           </Text>
           <Switch
+            thumbColor={colors.primary}
+            trackColor={{ false: colors.border, true: colors.primary }}
             value={isPriorityVisible}
             onValueChange={(value) => setPriorityVisible(value)}
           />
@@ -192,7 +196,13 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
               max={10}
               step={1}
               sliderLength={200}
-              markerStyle={{ width: 20, height: 20 }}
+              markerStyle={{
+                width: 20,
+                height: 20,
+                borderWidth: 1,
+                backgroundColor: colors.primary,
+                borderColor: colors.border,
+              }}
               pressedMarkerStyle={{ width: 30, height: 30 }}
               snapped={true}
             />
@@ -210,10 +220,12 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           </View>
         )}
         <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.text }]}>
+          <Text style={[styles.label, { color: colors.border }]}>
             Repeating Task
           </Text>
           <Switch
+            thumbColor={colors.primary}
+            trackColor={{ false: colors.border, true: colors.primary }}
             value={isRepeating}
             onValueChange={(value) => setIsRepeating(value)}
           />
@@ -222,8 +234,11 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           {isRepeating && <WeekdaySelect setWeekdayFormData={setWeekdays} />}
         </View>
       </View>
-      <Pressable style={styles.button} onPress={() => formSubmitHandler()}>
-        <Text style={[styles.buttonText, { color: colors.text }]}>
+      <Pressable
+        style={[styles.button, { backgroundColor: colors.primary }]}
+        onPress={() => formSubmitHandler()}
+      >
+        <Text style={[styles.buttonText, { color: colors.border }]}>
           Add new Task
         </Text>
       </Pressable>
