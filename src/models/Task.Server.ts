@@ -5,8 +5,13 @@ export type Task = {
   description: string
   completed: boolean
   priority?: number
-  timeOfDay?: string
+  timeOfDay?: TimeOfDay
   repeating: boolean
+  weekdays?: Array<number>
+}
+export type TimeOfDay = {
+  startTime: Date
+  endTime: Date
 }
 
 export const createTask = async (task: Task): Promise<void> => {
