@@ -8,12 +8,14 @@ import {
 } from "react-native"
 import React from "react"
 import MultiSlider from "@ptomasroos/react-native-multi-slider"
-import Radio from "./Radio"
+import TimeRange from "./TimeRange"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
 import type { Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
 import { v4 as uuidv4 } from "uuid"
+import WeekdaySelect from "./WeekdaySelect"
+import type { TimeOfDay } from "../models/Task.Server"
 
 interface TaskFormProps {
   setModalVisible: (bool: boolean) => void
@@ -28,15 +30,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: "auto",
-    backgroundColor: "blue",
   },
   innerContainer: {
     marginVertical: "auto",
     display: "flex",
-    gap: "2",
     height: "100%",
     width: "70%",
-    backgroundColor: "red",
   },
   label: {
     fontSize: 18,
@@ -87,28 +86,26 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   const [description, setDescription] = React.useState(
     props.taskToEdit ? props.taskToEdit?.description : "Do The Dishes",
   )
-  const [checked, setChecked] = React.useState(
-    props.taskToEdit
-      ? RADIO_OPTIONS.findIndex((e) => e === props.taskToEdit?.timeOfDay)
-      : 0,
-  )
-  const [radioInput, setRadioInput] = React.useState(
+  const [time, setTime] = React.useState(
     props.taskToEdit && props.taskToEdit.timeOfDay
       ? props.taskToEdit.timeOfDay
-      : "Any",
+      : null,
   )
+  const [startTime, setStartTime] = React.useState(time ? time.startTime : null)
+  const [endTime, setEndTime] = React.useState(time ? time.endTime : null)
   const [priority, setPriority] = React.useState(
     props.taskToEdit?.priority !== undefined
       ? props.taskToEdit.priority
       : undefined,
   )
+  const [weekdays, setWeekdays] = React.useState(
+    props.taskToEdit ? props.taskToEdit.weekdays : [-1],
+  )
   const [isRepeating, setIsRepeating] = React.useState(
     props.taskToEdit ? props.taskToEdit.repeating : false,
   )
-  const [isRadioVisible, setRadioVisible] = React.useState(
-    props.taskToEdit && props.taskToEdit.timeOfDay != RADIO_OPTIONS[0]
-      ? true
-      : false,
+  const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
+    props.taskToEdit && props.taskToEdit.timeOfDay ? true : false,
   )
   const [isPriorityVisible, setPriorityVisible] = React.useState(
     props.taskToEdit && props.taskToEdit.priority !== undefined ? true : false,
@@ -117,13 +114,14 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   const formResetHandler = () => {
     props.setModalVisible(false)
     setIsRepeating(true)
-    setRadioVisible(false)
-    setChecked(0)
+    setTimeRangeVisible(false)
     setPriorityVisible(false)
     setPriority(0)
   }
   const formSubmitHandler = () => {
-    const timeOfDayInput = isRadioVisible ? radioInput : undefined
+    const timeOfDayInput = isTimeRangeVisible
+      ? ({ startTime: startTime, endTime: endTime } as TimeOfDay)
+      : undefined
     const priorityInput = isPriorityVisible ? priority : undefined
 
     const task: Task = {
@@ -133,6 +131,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
       priority: priorityInput,
       timeOfDay: timeOfDayInput,
       repeating: isRepeating,
+      weekdays: weekdays,
     }
     createTask(task)
     formResetHandler()
@@ -157,17 +156,16 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
         <View style={styles.propertyContainer}>
           <Text style={[styles.label, { color: colors.text }]}>Time of Day</Text>
           <Switch
-            value={isRadioVisible}
-            onValueChange={(value) => setRadioVisible(value)}
+            value={isTimeRangeVisible}
+            onValueChange={(value) => setTimeRangeVisible(value)}
           />
         </View>
-        {isRadioVisible && (
-          <Radio
-            category="Time of Day"
-            options={RADIO_OPTIONS}
-            checked={checked}
-            setChecked={setChecked}
-            setRadioInput={setRadioInput}
+        {isTimeRangeVisible && (
+          <TimeRange
+            setStartTimeFormInput={setStartTime}
+            setEndTimeFormInput={setEndTime}
+            defaultStartTime={startTime}
+            defaultEndTime={endTime}
           />
         )}
         <View style={styles.propertyContainer}>
@@ -200,7 +198,6 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
             />
             <Text
               style={{
-                backgroundColor: colors.notification,
                 textAlign: "center",
                 width: 30,
                 height: 30,
@@ -214,12 +211,15 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
         )}
         <View style={styles.propertyContainer}>
           <Text style={[styles.label, { color: colors.text }]}>
-            Repeat Task Daily
+            Repeating Task
           </Text>
           <Switch
             value={isRepeating}
             onValueChange={(value) => setIsRepeating(value)}
           />
+        </View>
+        <View style={{ marginTop: 0 }}>
+          {isRepeating && <WeekdaySelect setWeekdayFormData={setWeekdays} />}
         </View>
       </View>
       <Pressable style={styles.button} onPress={() => formSubmitHandler()}>
