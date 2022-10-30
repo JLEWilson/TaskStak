@@ -31,6 +31,10 @@ export const formatAMPM = (date: Date) => {
   hours = hours % 12
   hours = hours ? hours : 12
   minutes = +minutes.toString().padStart(2, "0")
-  let strTime = hours + ":" + minutes + " " + ampm
+  let strTime =
+    minutes < 10
+      ? hours + ":" + 0 + minutes.toString() + " " + ampm
+      : hours + ":" + minutes + " " + ampm
+
   return strTime
 }
