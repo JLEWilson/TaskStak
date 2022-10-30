@@ -2,6 +2,7 @@ import React from "react"
 import { Text, StyleSheet, View, Pressable } from "react-native"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { formatAMPM } from "../utils"
+import { useTheme } from "@react-navigation/native"
 import type {
   EvtTypes,
   DateTimePickerEvent,
@@ -14,11 +15,12 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 10,
     borderRadius: 10,
-    borderColor: "black",
     borderWidth: 1,
     borderBottomWidth: 2,
     borderLeftWidth: 2,
-    backgroundColor: "blue",
+  },
+  text: {
+    fontSize: 18,
   },
 })
 type TimeRangeProps = {
@@ -74,18 +76,24 @@ const TimeRange: React.FC<TimeRangeProps> = ({
         console.log("nothing happening here")
     }
   }
-
+  const { colors } = useTheme()
   const startDisplay = formatAMPM(startTime)
   const endDisplay = formatAMPM(endTime)
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => setShowStart(true)} style={styles.button}>
-        <Text>{startDisplay}</Text>
+      <Pressable
+        onPress={() => setShowStart(true)}
+        style={[styles.button, { backgroundColor: colors.primary }]}
+      >
+        <Text style={[styles.text, { color: colors.text }]}>{startDisplay}</Text>
       </Pressable>
-      <Text> to </Text>
-      <Pressable onPress={() => setShowEnd(true)} style={styles.button}>
-        <Text>{endDisplay}</Text>
+      <Text style={[styles.text, { color: colors.text }]}> to </Text>
+      <Pressable
+        onPress={() => setShowEnd(true)}
+        style={[styles.button, { backgroundColor: colors.primary }]}
+      >
+        <Text style={[styles.text, { color: colors.text }]}>{endDisplay}</Text>
       </Pressable>
       {showStart && (
         <DateTimePicker
