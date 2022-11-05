@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
-import type { NavigatorProps } from "../utils"
+// import type { NavigatorProps } from "../utils"
+import { getAllTasks, Task } from "../models/Task.Server"
 
 const styles = StyleSheet.create({
   container: {
@@ -13,11 +14,11 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
 })
-const HomeScreen = ({ navigation }: NavigatorProps) => {
+
+const HomeScreen = () => {
   const { colors } = useTheme()
-  const forTesting = () => {}
   return (
-    <View>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.text, { color: colors.text }]}>Home</Text>
     </View>
   )
