@@ -19,6 +19,9 @@ const MyTheme = {
 }
 const Tab = createBottomTabNavigator()
 
+// Need to figure out a way to gather all data here and share it amongst components instead of grabbing the data in those components,
+// or some other form of state management system
+
 export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
