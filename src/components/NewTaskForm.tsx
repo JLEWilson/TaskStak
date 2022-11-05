@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
 import type { Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
+import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
@@ -94,7 +95,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   const [startTime, setStartTime] = React.useState(time ? time.startTime : null)
   const [endTime, setEndTime] = React.useState(time ? time.endTime : null)
   const [priority, setPriority] = React.useState(
-    props.taskToEdit?.priority !== undefined ? props.taskToEdit.priority : 0,
+    props.taskToEdit ? props.taskToEdit.priority : false,
   )
   const [weekdays, setWeekdays] = React.useState(
     props.taskToEdit ? props.taskToEdit.weekdays : [-1],
@@ -105,33 +106,30 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
     props.taskToEdit && props.taskToEdit.timeOfDay ? true : false,
   )
-  const [isPriorityVisible, setPriorityVisible] = React.useState(
-    props.taskToEdit && props.taskToEdit.priority !== undefined ? true : false,
-  )
 
   const formResetHandler = () => {
     props.setModalVisible(false)
-    setIsRepeating(true)
+    setIsRepeating(false)
     setTimeRangeVisible(false)
-    setPriorityVisible(false)
-    setPriority(0)
+    setPriority(false)
   }
   const formSubmitHandler = () => {
     const timeOfDayInput = isTimeRangeVisible
       ? ({ startTime: startTime, endTime: endTime } as TimeOfDay)
       : undefined
-    const priorityInput = isPriorityVisible ? priority : undefined
 
     const task: Task = {
       id: uuidv4(),
       description: description,
       completed: false,
-      priority: priorityInput,
+      priority: priority,
       timeOfDay: timeOfDayInput,
       repeating: isRepeating,
       weekdays: weekdays,
     }
-    createTask(task)
+
+    //createTask(task)
+    console.log(task)
     formResetHandler()
   }
 
@@ -154,7 +152,29 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           />
         </View>
         <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.text }]}>Time of Day</Text>
+          <Text style={[styles.label, { color: colors.border }]}>Priority</Text>
+          <Switch
+            thumbColor={colors.primary}
+            trackColor={{ false: colors.border, true: colors.primary }}
+            value={priority}
+            onValueChange={(value) => setPriority(value)}
+          />
+        </View>
+
+        <View style={styles.propertyContainer}>
+          <Text style={[styles.label, { color: colors.border }]}>Repeating</Text>
+          <Switch
+            thumbColor={colors.primary}
+            trackColor={{ false: colors.border, true: colors.primary }}
+            value={isRepeating}
+            onValueChange={(value) => setIsRepeating(value)}
+          />
+        </View>
+        <View style={{ marginTop: 0 }}>
+          {isRepeating && <WeekdaySelect setWeekdayFormData={setWeekdays} />}
+        </View>
+        <View style={styles.propertyContainer}>
+          <Text style={[styles.label, { color: colors.text }]}>TimeRange</Text>
           <Switch
             thumbColor={colors.primary}
             trackColor={{ false: colors.border, true: colors.primary }}
@@ -170,69 +190,6 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
             defaultEndTime={endTime}
           />
         )}
-        <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.border }]}>
-            Task Priority Level
-          </Text>
-          <Switch
-            thumbColor={colors.primary}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            value={isPriorityVisible}
-            onValueChange={(value) => setPriorityVisible(value)}
-          />
-        </View>
-        {isPriorityVisible && (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <MultiSlider
-              onValuesChange={(value) => setPriority(value[0])}
-              values={priority ? [priority] : [0]}
-              min={0}
-              max={10}
-              step={1}
-              sliderLength={200}
-              markerStyle={{
-                width: 20,
-                height: 20,
-                borderWidth: 1,
-                backgroundColor: colors.primary,
-                borderColor: colors.border,
-              }}
-              pressedMarkerStyle={{ width: 30, height: 30 }}
-              snapped={true}
-            />
-            <Text
-              style={{
-                textAlign: "center",
-                width: 30,
-                height: 30,
-                paddingTop: 5,
-                borderRadius: 15,
-              }}
-            >
-              {priority}
-            </Text>
-          </View>
-        )}
-        <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.border }]}>
-            Repeating Task
-          </Text>
-          <Switch
-            thumbColor={colors.primary}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            value={isRepeating}
-            onValueChange={(value) => setIsRepeating(value)}
-          />
-        </View>
-        <View style={{ marginTop: 0 }}>
-          {isRepeating && <WeekdaySelect setWeekdayFormData={setWeekdays} />}
-        </View>
       </View>
       <Pressable
         style={[styles.button, { backgroundColor: colors.primary }]}
