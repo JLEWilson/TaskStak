@@ -8,11 +8,10 @@ type WeekdaySelectProps = {
 }
 
 const styles = StyleSheet.create({
-  item: {
-    marginHorizontal: 30,
-  },
+  item: {},
   wrapper: {
     marginTop: -15,
+    marginHorizontal: -40,
   },
 })
 
