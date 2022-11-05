@@ -51,6 +51,7 @@ const testTasks: Task[] = [
     id: "base",
     description: "aReallyLongDescripti",
     completed: false,
+    priority: true,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -58,6 +59,7 @@ const testTasks: Task[] = [
     id: "morning_1",
     description: "task2",
     completed: false,
+    priority: true,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -65,6 +67,7 @@ const testTasks: Task[] = [
     id: "morning_2",
     description: "task3",
     completed: false,
+    priority: true,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -72,7 +75,7 @@ const testTasks: Task[] = [
     id: "morning_3",
     description: "task4",
     completed: false,
-    priority: 1,
+    priority: true,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -80,7 +83,7 @@ const testTasks: Task[] = [
     id: "morning_4",
     description: "task5",
     completed: false,
-    priority: 2,
+    priority: false,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -88,6 +91,7 @@ const testTasks: Task[] = [
     id: "afternoon_1",
     description: "task6",
     completed: false,
+    priority: false,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -95,6 +99,7 @@ const testTasks: Task[] = [
     id: "afternoon_2",
     description: "task7",
     completed: false,
+    priority: false,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -102,6 +107,7 @@ const testTasks: Task[] = [
     id: "afternoon_3",
     description: "task8",
     completed: false,
+    priority: true,
     timeOfDay: { startTime: new Date(0), endTime: new Date() },
     repeating: true,
   },
@@ -120,7 +126,7 @@ const TaskList = () => {
         setTasks(data)
       } else setTasks(testTasks)
     }
-    const result = fetchData().catch(console.error)
+    const data = fetchData().catch(console.error)
   }, [])
 
   return (
@@ -139,14 +145,15 @@ const TaskList = () => {
         ></NewTaskForm>
       </Modal>
       <ScrollView style={styles.taskContainer}>
-        {tasks.map((task, index) => (
-          <TaskItem
-            task={task}
-            key={index}
-            setModalVisible={setModalVisible}
-            setTaskToEdit={setTaskToEdit}
-          />
-        ))}
+        {tasks &&
+          tasks.map((task, index) => (
+            <TaskItem
+              task={task}
+              key={index}
+              setModalVisible={setModalVisible}
+              setTaskToEdit={setTaskToEdit}
+            />
+          ))}
       </ScrollView>
       <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
         <Icon name="add" size={30} color="white" />
