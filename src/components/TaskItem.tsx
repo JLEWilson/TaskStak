@@ -33,7 +33,6 @@ const TaskItem: React.FC<TaskItemProps> = ({
   setModalVisible,
   setTaskToEdit,
 }) => {
-  // CURRENTLY THIS IS NOT RUNNING
   const handleEditTask = () => {
     setTaskToEdit(task)
     setModalVisible(true)
