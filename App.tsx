@@ -1,10 +1,10 @@
-import { StatusBar } from "expo-status-bar"
-import { StyleSheet, Text, View } from "react-native"
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native"
+import { StyleSheet } from "react-native"
+import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import HomeScreen from "./src/screens/Home"
 import TaskList from "./src/screens/TaskList"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
+import Store from "./store"
 
 const MyTheme = {
   dark: true,
@@ -36,7 +36,7 @@ export default function App() {
       >
         <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          children={() => <HomeScreen store={Store} />}
           options={({ route }) => ({
             tabBarIcon: () => {
               return (
@@ -49,7 +49,7 @@ export default function App() {
         />
         <Tab.Screen
           name="TaskList"
-          component={TaskList}
+          children={() => <TaskList store={Store} />}
           options={({ route }) => ({
             tabBarIcon: () => {
               return (
