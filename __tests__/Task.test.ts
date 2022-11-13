@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import type { Task } from "../src/models/Task.Server"
-import { TIME_OF_DAY } from "../src/utils"
 import { createTask, getTask, deleteTask } from "../src/models/Task.Server"
+import { taskIdModifier } from "../src/models/Globals.Models"
 
 beforeEach(async () => {
   await AsyncStorage.clear()
@@ -16,12 +16,15 @@ describe("getTask", () => {
   test("returns a task by id", async () => {
     const myTask: Task = {
       id: "test_id",
+      completed: false,
       description: "this is a task for testing",
-      priority: 1,
-      timeOfDay: TIME_OF_DAY.Morning,
+      priority: false,
+      repeating: false,
     }
-    const taskString = JSON.stringify(myTask)
-    await AsyncStorage.setItem(myTask.id, taskString)
+    await AsyncStorage.setItem(
+      taskIdModifier + myTask.id,
+      JSON.stringify(myTask),
+    )
 
     const result = await getTask(myTask.id)
     expect(result).toEqual(myTask)
@@ -31,9 +34,10 @@ describe("createTask", () => {
   test("if no task exists, add the task", async () => {
     const myTask: Task = {
       id: "test_id",
+      completed: false,
       description: "this is a task for testing",
-      priority: 1,
-      timeOfDay: TIME_OF_DAY.Morning,
+      priority: false,
+      repeating: false,
     }
     await createTask(myTask)
 
@@ -46,9 +50,10 @@ describe("deleteTask", () => {
   test("if the task with that id exists in AsyncStorage, delete it", async () => {
     const myTask: Task = {
       id: "test_id",
+      completed: false,
       description: "this is a task for testing",
-      priority: 1,
-      timeOfDay: TIME_OF_DAY.Morning,
+      priority: false,
+      repeating: false,
     }
     await createTask(myTask)
 
