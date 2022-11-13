@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import { getAllTasks } from "../models/Task.Server"
 import type { Task } from "../models/Task.Server"
 import TaskItem from "../components/TaskItem"
+import { storeType } from "../../store"
 
 const styles = StyleSheet.create({
   container: {
@@ -112,8 +113,10 @@ const testTasks: Task[] = [
     repeating: true,
   },
 ]
-
-const TaskList = () => {
+type TaskListProps = {
+  store: storeType
+}
+const TaskList: React.FC<TaskListProps> = () => {
   const { colors } = useTheme()
   const [isModalVisible, setModalVisible] = React.useState(false)
   const [tasks, setTasks] = React.useState<Task[]>([])
