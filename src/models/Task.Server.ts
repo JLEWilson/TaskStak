@@ -14,6 +14,13 @@ export type TimeOfDay = {
   startTime: Date
   endTime: Date
 }
+export const defaultTask: Task = {
+  id: "default_task",
+  description: "You have no tasks!",
+  completed: false,
+  priority: false,
+  repeating: true,
+}
 
 export const createTask = async (task: Task): Promise<void> => {
   try {
@@ -64,6 +71,7 @@ export const deleteTask = async (id: Task["id"]) => {
 }
 
 //The following functions are all about sorting
+
 // Needs a function that sets completed to false the next day
 export const getTodaysTasks = async () => {
   const tasks = await getAllTasks()
@@ -79,19 +87,16 @@ export const getTasksForNow = (tasks: Task[]) => {
   const now = new Date()
   const isInTimeRange = (task: Task) => {
     if (task.completed) return false
-    let returnTask: boolean
-    switch (task.timeOfDay) {
-      case undefined:
-        // return task if no time of day is set
-        returnTask = true
-        break
-      default:
-        // return task if time of day is set and it is now after the start time
-        // return task if time of day is set, task is priority and it is after the end time
-        returnTask = task.timeOfDay.startTime < now
-        returnTask = task.timeOfDay.endTime < now && task.priority
-    }
-    return returnTask
+    if (task.timeOfDay === undefined) return true
+    if (task.timeOfDay.startTime < now && task.timeOfDay.endTime > now)
+      return true
+    if (task.timeOfDay.endTime < now && task.priority) return true
+    return false
   }
   return tasks.filter(isInTimeRange)
+}
+// change task to completed and then if the task is not repeating delete it
+export const setTaskCompleted = (task: Task) => {
+  task.completed = true
+  return A.setItem(taskIdModifier + task.id, JSON.stringify(task))
 }
