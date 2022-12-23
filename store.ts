@@ -6,6 +6,7 @@ import type { Task } from "./src/models/Task.Server"
 export type RootState = {
   allTasks: Task[]
   dailyToDoList: Task[]
+  currentToDoList: Task[]
   currentTask: Task
 }
 
