@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { Provider } from "react-redux"
 import HomeScreen from "./src/screens/Home"
 import TaskList from "./src/screens/TaskList"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import Store from "./store"
+import { useDispatch } from "react-redux"
 
 const MyTheme = {
   dark: true,
@@ -19,49 +21,56 @@ const MyTheme = {
 }
 const Tab = createBottomTabNavigator()
 
-// Need to figure out a way to gather all data here and share it amongst components instead of grabbing the data in those components,
-// or some other form of state management system
-
 export default function App() {
   return (
-    <NavigationContainer theme={MyTheme}>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle: {
-            backgroundColor: MyTheme.colors.primary,
-            height: 60,
-          },
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          children={() => <HomeScreen store={Store} />}
-          options={({ route }) => ({
-            tabBarIcon: () => {
-              return (
-                <MaterialIcon name="home" size={25} style={{ paddingTop: 5 }} />
-              )
+    <Provider store={Store}>
+      <NavigationContainer theme={MyTheme}>
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarStyle: {
+              backgroundColor: MyTheme.colors.primary,
+              height: 60,
             },
-            tabBarActiveTintColor: "tomato",
-            tabBarInactiveTintColor: "gray",
-          })}
-        />
-        <Tab.Screen
-          name="TaskList"
-          children={() => <TaskList store={Store} />}
-          options={({ route }) => ({
-            tabBarIcon: () => {
-              return (
-                <MaterialIcon name="list" size={25} style={{ paddingTop: 5 }} />
-              )
-            },
-            tabBarActiveTintColor: "tomato",
-            tabBarInactiveTintColor: "gray",
-          })}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+          }}
+        >
+          <Tab.Screen
+            name="Home"
+            children={() => <HomeScreen store={Store} />}
+            options={({ route }) => ({
+              tabBarIcon: () => {
+                return (
+                  <MaterialIcon
+                    name="home"
+                    size={25}
+                    style={{ paddingTop: 5 }}
+                  />
+                )
+              },
+              tabBarActiveTintColor: "tomato",
+              tabBarInactiveTintColor: "gray",
+            })}
+          />
+          <Tab.Screen
+            name="TaskList"
+            children={() => <TaskList store={Store} />}
+            options={({ route }) => ({
+              tabBarIcon: () => {
+                return (
+                  <MaterialIcon
+                    name="list"
+                    size={25}
+                    style={{ paddingTop: 5 }}
+                  />
+                )
+              },
+              tabBarActiveTintColor: "tomato",
+              tabBarInactiveTintColor: "gray",
+            })}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </Provider>
   )
 }
 
