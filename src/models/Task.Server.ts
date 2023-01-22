@@ -69,12 +69,17 @@ export const deleteTask = async (id: Task["id"]) => {
     throw err
   }
 }
+/*
+ _________                   __   .__                  
+ /   _____/  ____  _______ _/  |_ |__|  ____     ____  
+ \_____  \  /  _ \ \_  __ \\   __\|  | /    \   / ___\ 
+ /        \(  <_> ) |  | \/ |  |  |  ||   |  \ / /_/  >
+/_______  / \____/  |__|    |__|  |__||___|  / \___  / 
+        \/                                 \/ /_____/             
+*/
 
-//The following functions are all about sorting
-
-// Needs a function that sets completed to false the next day
-export const getTodaysTasks = async () => {
-  const tasks = await getAllTasks()
+/* Gets all tasks from storage, and returns an array of tasks for today */
+export const getTodaysTasks = async (tasks: Task[]) => {
   //getDay is 0-6 Sun - Sat, WeekdayPicker is 1-7 Sun - Sat
   const today = new Date().getDay()
   const isForToday = (task: Task) => {
@@ -82,7 +87,7 @@ export const getTodaysTasks = async () => {
   }
   return tasks?.filter(isForToday)
 }
-
+/* Takes in todays tasks and filters down to tasks for the current time */
 export const getTasksForNow = (tasks: Task[]) => {
   const now = new Date()
   const isInTimeRange = (task: Task) => {
@@ -95,6 +100,9 @@ export const getTasksForNow = (tasks: Task[]) => {
   }
   return tasks.filter(isInTimeRange)
 }
+//Maybe get a random task from the now list?
+//Maybe explude current task, get a new random one, then put the task back into the array
+
 // change task to completed and then if the task is not repeating delete it
 export const setTaskCompleted = (task: Task) => {
   task.completed = true
