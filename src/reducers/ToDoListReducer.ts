@@ -8,7 +8,7 @@ export const initialState: RootState = {
   currentToDoList: [],
   currentTask: defaultTask,
 }
-type Action =
+export type Action =
   | { type: "SET_TASKS"; payload: Task[] }
   | { type: "SET_DAILY_TO_DO_LIST"; payload: Task[] }
   | { type: "SET_CURRENT_TO_DO_LIST"; payload: Task[] }
