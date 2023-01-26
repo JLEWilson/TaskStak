@@ -109,10 +109,11 @@ export const randomizeTasks = (tasks: Task[]) => {
   }
   return tasks
 }
-
-//Maybe get a random task from the now list?
-//Maybe explude current task, get a new random one, then put the task back into the array
-
+export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
+  const index = tasks.indexOf(taskToPass)
+  tasks.splice(index, index)
+  return randomizeTasks(tasks).push(taskToPass)
+}
 // change task to completed and then if the task is not repeating delete it
 export const setTaskCompleted = (task: Task) => {
   task.completed = true
