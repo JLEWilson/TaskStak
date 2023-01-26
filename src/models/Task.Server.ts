@@ -114,7 +114,9 @@ export const randomizeTasks = (tasks: Task[]) => {
 export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
   const index = tasks.indexOf(taskToPass)
   tasks.splice(index, index)
-  return randomizeTasks(tasks).push(taskToPass)
+  const newList = randomizeTasks(tasks)
+  newList.push(taskToPass)
+  return newList
 }
 
 export const setTaskCompleted = (task: Task) => {
