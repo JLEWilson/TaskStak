@@ -100,6 +100,16 @@ export const getTasksForNow = (tasks: Task[]) => {
   }
   return tasks.filter(isInTimeRange)
 }
+export const randomizeTasks = (tasks: Task[]) => {
+  for (let i = tasks.length - 1; i > 0; i--) {
+    let randomPos = Math.floor(Math.random() * (i + 1))
+    let temp = tasks[i]
+    tasks[i] = tasks[randomPos]
+    tasks[randomPos] = temp
+  }
+  return tasks
+}
+
 //Maybe get a random task from the now list?
 //Maybe explude current task, get a new random one, then put the task back into the array
 
