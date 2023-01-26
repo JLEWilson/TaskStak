@@ -8,11 +8,8 @@ import TaskList from "./src/screens/TaskList"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import Store from "./store"
 import { useDispatch } from "react-redux"
-import {
-  getTodaysTasks,
-  getTasksForNow,
-  getAllTasks,
-} from "./src/models/Task.Server"
+import { fetchData } from "./src/actions"
+
 import * as a from "./src/actions/ActionTypes"
 
 const MyTheme = {
@@ -31,38 +28,9 @@ let firstLoad = true
 
 export default function App() {
   React.useEffect(() => {
-    const fetchData = async () => {
-      const allTasks = await getAllTasks()
-      if (allTasks === null) return
-      const dailyList = await getTodaysTasks(allTasks)
-      if (dailyList === null) return
-      const currList = getTasksForNow(dailyList)
-      const currTask = currList[0]
-
-      const action1 = {
-        type: a.setTasks,
-        payload: allTasks,
-      }
-      const action2 = {
-        type: a.setDailyToDoList,
-        payload: dailyList,
-      }
-      const action3 = {
-        type: a.setCurrentToDoList,
-        payload: currList,
-      }
-      const action4 = {
-        type: a.setCurrentTask,
-        payload: currTask,
-      }
-      Store.dispatch(action1)
-      Store.dispatch(action2)
-      Store.dispatch(action3)
-      Store.dispatch(action4)
-    }
     if (firstLoad) {
       firstLoad = false
-      fetchData().catch(console.error)
+      fetchData(Store).catch(console.error)
     }
   }, [])
   return (
