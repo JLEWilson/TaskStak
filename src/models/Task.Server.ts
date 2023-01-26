@@ -10,10 +10,12 @@ export type Task = {
   repeating: boolean
   weekdays?: Array<number>
 }
+
 export type TimeOfDay = {
   startTime: Date
   endTime: Date
 }
+
 export const defaultTask: Task = {
   id: "default_task",
   description: "You have no tasks!",
@@ -77,8 +79,6 @@ export const deleteTask = async (id: Task["id"]) => {
 /_______  / \____/  |__|    |__|  |__||___|  / \___  / 
         \/                                 \/ /_____/             
 */
-
-/* Gets all tasks from storage, and returns an array of tasks for today */
 export const getTodaysTasks = async (tasks: Task[]) => {
   //getDay is 0-6 Sun - Sat, WeekdayPicker is 1-7 Sun - Sat
   const today = new Date().getDay()
@@ -87,7 +87,7 @@ export const getTodaysTasks = async (tasks: Task[]) => {
   }
   return tasks?.filter(isForToday)
 }
-/* Takes in todays tasks and filters down to tasks for the current time */
+
 export const getTasksForNow = (tasks: Task[]) => {
   const now = new Date()
   const isInTimeRange = (task: Task) => {
@@ -100,6 +100,7 @@ export const getTasksForNow = (tasks: Task[]) => {
   }
   return tasks.filter(isInTimeRange)
 }
+
 export const randomizeTasks = (tasks: Task[]) => {
   for (let i = tasks.length - 1; i > 0; i--) {
     let randomPos = Math.floor(Math.random() * (i + 1))
@@ -109,13 +110,19 @@ export const randomizeTasks = (tasks: Task[]) => {
   }
   return tasks
 }
+
 export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
   const index = tasks.indexOf(taskToPass)
   tasks.splice(index, index)
   return randomizeTasks(tasks).push(taskToPass)
 }
-// change task to completed and then if the task is not repeating delete it
+
 export const setTaskCompleted = (task: Task) => {
   task.completed = true
+  if (task.repeating === false) {
+    return A.removeItem(taskIdModifier + task.id, (e) => {
+      console.error(e)
+    })
+  }
   return A.setItem(taskIdModifier + task.id, JSON.stringify(task))
 }
