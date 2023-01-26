@@ -5,6 +5,7 @@ import {
 } from "../models/Task.Server"
 import * as a from "../actions/ActionTypes"
 import type { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore"
+import type { Task } from "../models/Task.Server"
 
 export const fetchData = async (store: ToolkitStore) => {
   const allTasks = await getAllTasks()
@@ -35,4 +36,20 @@ export const fetchData = async (store: ToolkitStore) => {
   store.dispatch(action2)
   store.dispatch(action3)
   store.dispatch(action4)
+}
+
+export const setCurrentTask = (store: ToolkitStore, nextTask: Task) => {
+  const action = {
+    type: a.setCurrentTask,
+    payload: nextTask,
+  }
+  store.dispatch(action)
+}
+
+export const setCurrentToDoList = (store: ToolkitStore, newTaskList: Task[]) => {
+  const action = {
+    type: a.setCurrentToDoList,
+    payload: newTaskList,
+  }
+  store.dispatch(action)
 }
