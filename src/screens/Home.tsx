@@ -4,12 +4,15 @@ import { useTheme } from "@react-navigation/native"
 import { useSelector } from "react-redux"
 import type { RootState, storeType } from "../../store"
 import CurrentTask from "../components/CurrentTask"
+import { setCurrentTask, setCurrentToDoList } from "../actions/index"
 import {
   getAllTasks,
   Task,
+  getTasksForNow,
   defaultTask,
   setTaskCompleted,
 } from "../models/Task.Server"
+import { current } from "@reduxjs/toolkit"
 
 const styles = StyleSheet.create({
   container: {
@@ -31,13 +34,17 @@ type HomeScreenProps = {
 }
 const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
   const currentTask = useSelector((state: RootState) => state.currentTask)
+  const currentTDL = useSelector((state: RootState) => state.currentToDoList)
   const displayTask = currentTask ? currentTask : defaultTask
-  const dispatch = store.dispatch
   const { colors } = useTheme()
 
   const handleTaskCompleted = () => {
-    // will also need to reload the currentTasks list
     setTaskCompleted(displayTask)
+    // change current task
+    const copy = currentTDL.splice(0, 1)
+    setCurrentToDoList(store, copy)
+    setCurrentTask(store, copy[0])
+    // update redux with new tasks
   }
   const handleTaskPassed = () => {
     // will also need to reload the currentTasks list
