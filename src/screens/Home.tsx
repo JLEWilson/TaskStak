@@ -5,13 +5,7 @@ import { useSelector } from "react-redux"
 import type { RootState, storeType } from "../../store"
 import CurrentTask from "../components/CurrentTask"
 import { setCurrentTask, setCurrentToDoList } from "../actions/index"
-import {
-  getAllTasks,
-  Task,
-  getTasksForNow,
-  defaultTask,
-  setTaskCompleted,
-} from "../models/Task.Server"
+import { passOnTask, defaultTask, setTaskCompleted } from "../models/Task.Server"
 import { current } from "@reduxjs/toolkit"
 
 const styles = StyleSheet.create({
@@ -48,6 +42,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
   }
   const handleTaskPassed = () => {
     // will also need to reload the currentTasks list
+    const newTaskList = passOnTask(currentTask, currentTDL)
+    setCurrentToDoList(store, newTaskList)
+    setCurrentTask(store, newTaskList[0])
   }
 
   return (
