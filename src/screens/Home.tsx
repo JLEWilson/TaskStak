@@ -34,14 +34,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
 
   const handleTaskCompleted = () => {
     setTaskCompleted(displayTask)
-    // change current task
     const copy = currentTDL.splice(0, 1)
     setCurrentToDoList(store, copy)
-    setCurrentTask(store, copy[0])
-    // update redux with new tasks
+    const tempTask = copy.length < 0 ? copy[0] : defaultTask
+    setCurrentTask(store, tempTask)
   }
   const handleTaskPassed = () => {
-    // will also need to reload the currentTasks list
     const newTaskList = passOnTask(currentTask, currentTDL)
     setCurrentToDoList(store, newTaskList)
     setCurrentTask(store, newTaskList[0])
