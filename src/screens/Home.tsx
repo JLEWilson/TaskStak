@@ -29,6 +29,9 @@ type HomeScreenProps = {
 const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
   const currentTask = useSelector((state: RootState) => state.currentTask)
   const currentTDL = useSelector((state: RootState) => state.currentToDoList)
+  React.useEffect(() => {
+    console.log(currentTask)
+  }, [currentTask])
   const displayTask = currentTask ? currentTask : defaultTask
   const { colors } = useTheme()
 
@@ -43,16 +46,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
     const newTaskList = passOnTask(currentTask, currentTDL)
     setCurrentToDoList(store, newTaskList)
     setCurrentTask(store, newTaskList[0])
+    console.log("actually passed")
   }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.text, { color: colors.text }]}>Home</Text>
-      <CurrentTask task={displayTask} />
-      <View>
-        <Pressable onPress={() => handleTaskCompleted}>Completed</Pressable>
-        <Pressable onPress={() => handleTaskPassed}>Pass</Pressable>
-      </View>
+      <CurrentTask
+        task={displayTask}
+        onPass={handleTaskPassed}
+        onComplete={handleTaskCompleted}
+      />
+      <View></View>
     </View>
   )
 }
