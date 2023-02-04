@@ -7,7 +7,7 @@ import HomeScreen from "./src/screens/Home"
 import TaskList from "./src/screens/TaskList"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import Store from "./store"
-import { useDispatch } from "react-redux"
+import { ThunkDispatch } from "redux-thunk"
 import { fetchData } from "./src/actions"
 
 import * as a from "./src/actions/ActionTypes"
@@ -30,7 +30,7 @@ export default function App() {
   React.useEffect(() => {
     if (firstLoad) {
       firstLoad = false
-      fetchData(Store).catch(console.error)
+      Store.dispatch(fetchData())
     }
   }, [])
   return (
