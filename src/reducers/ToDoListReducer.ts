@@ -1,10 +1,10 @@
 import { Task } from "../models/Task.Server"
-import { RootState } from "../../store"
+import { defaultState, RootState } from "../../store"
 import { defaultTask } from "../models/Task.Server"
 import * as c from "../actions/ActionTypes"
 import type { Action } from "../actions/ActionTypes"
 
-export const initialState: RootState = {
+export const initialState: defaultState = {
   error: null,
   isLoadingAllTasks: false,
   allTasks: [],
