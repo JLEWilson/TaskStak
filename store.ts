@@ -3,7 +3,7 @@ import RootReducer from "./src/reducers/RootReducer"
 import { Task } from "./src/models/Task.Server"
 import thunk from "redux-thunk"
 
-export type RootState = {
+export type defaultState = {
   error: null | Error
   isLoadingAllTasks: false
   allTasks: Task[]
@@ -21,4 +21,5 @@ const store = configureStore({
 
 export default store
 
-export type storeType = typeof store
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
