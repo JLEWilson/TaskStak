@@ -1,5 +1,5 @@
 import { combineReducers } from "redux"
-import toDoListReducer from "./ToDoListReducer.ts"
+import toDoListReducer from "./toDoListSlice.ts"
 
 const rootReducer = combineReducers({
   todolist: toDoListReducer,
