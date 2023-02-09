@@ -7,10 +7,25 @@ import HomeScreen from "./src/screens/Home"
 import TaskList from "./src/screens/TaskList"
 import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import Store from "./store"
-import { ThunkDispatch } from "redux-thunk"
-import { fetchData } from "./src/actions"
-
+import {
+  requestAllTasks,
+  getAllTasksSuccess,
+  getAllTasksFailure,
+  requestDailyToDoList,
+  getDailyTasksSuccess,
+  getDailyTasksFailure,
+  requestCurrentToDoList,
+  getCurrentTasksSuccess,
+  getCurrentTasksFailure,
+  setCurrentTask,
+} from "./src/reducers/toDoListSlice"
+import {
+  getAllTasks,
+  getTodaysTasks,
+  getTasksForNow,
+} from "./src/models/Task.Server"
 import * as a from "./src/actions/ActionTypes"
+import { useAppDispatch } from "./src/hooks/redux"
 
 const MyTheme = {
   dark: true,
@@ -27,10 +42,47 @@ const Tab = createBottomTabNavigator()
 let firstLoad = true
 
 export default function App() {
+  const dispatch = useAppDispatch()
   React.useEffect(() => {
+    const fetchData = async () => {
+      dispatch(requestAllTasks())
+      const allTasks = await getAllTasks()
+      if (allTasks instanceof Error || allTasks === null) {
+        // use default data maybe?
+        dispatch(getAllTasksFailure(new Error("There are no tasks")))
+        return
+      } else {
+        dispatch(getAllTasksSuccess(allTasks))
+      }
+      //Daily Tasks
+      dispatch(requestDailyToDoList())
+      const dailyTasks = await getTodaysTasks(allTasks)
+      if (dailyTasks instanceof Error || dailyTasks.length < 1) {
+        dispatch(getDailyTasksFailure(new Error("There are no tasks for today")))
+        return
+      } else {
+        dispatch(getDailyTasksSuccess(dailyTasks))
+      }
+      //Current Tasks
+      dispatch(requestCurrentToDoList())
+      const currentTasks = getTasksForNow(dailyTasks)
+      if (currentTasks instanceof Error || dailyTasks.length < 1) {
+        dispatch(
+          getCurrentTasksFailure(
+            new Error("There are no tasks scheduled for now"),
+          ),
+        )
+        return
+      } else {
+        dispatch(getCurrentTasksSuccess(currentTasks))
+      }
+      //Current Task
+      dispatch(setCurrentTask(currentTasks[0]))
+    }
     if (firstLoad) {
       firstLoad = false
-      Store.dispatch(fetchData())
+      //All Tasks
+      fetchData()
     }
   }, [])
   return (
