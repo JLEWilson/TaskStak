@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
-import RootReducer from "./src/reducers/RootReducer"
-import { Task } from "./src/models/Task.Server"
 import thunk from "redux-thunk"
+import toDoListReducer from "./src/reducers/toDoListSlice"
 
 const store = configureStore({
-  reducer: RootReducer,
+  reducer: {
+    todolist: toDoListReducer,
+  },
   middleware: [thunk],
 })
 
