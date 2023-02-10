@@ -3,7 +3,7 @@ import type { RootState } from "../../store"
 import type { Task } from "../models/Task.Server"
 import { defaultTask } from "../models/Task.Server"
 
-export interface defaultState {
+export interface ToDoListState {
   error: null | Error
   isLoadingAllTasks: boolean
   allTasks: Task[]
@@ -14,7 +14,7 @@ export interface defaultState {
   currentTask: Task
 }
 
-export const initialState: defaultState = {
+const initialState: ToDoListState = {
   error: null,
   isLoadingAllTasks: false,
   allTasks: [],
@@ -62,6 +62,9 @@ export const toDoListSlice = createSlice({
       state.isLoadingCurrent = false
       state.error = action.payload
     },
+    setCurrentTasks: (state, action: PayloadAction<Task[]>) => {
+      state.currentToDoList = action.payload
+    },
     setCurrentTask: (state, action: PayloadAction<Task>) => {
       state.currentTask = action.payload
     },
@@ -78,6 +81,7 @@ export const {
   requestCurrentToDoList,
   getCurrentTasksSuccess,
   getCurrentTasksFailure,
+  setCurrentTasks,
   setCurrentTask,
 } = toDoListSlice.actions
 
