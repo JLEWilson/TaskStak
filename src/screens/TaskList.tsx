@@ -8,6 +8,7 @@ import { getAllTasks } from "../models/Task.Server"
 import type { Task } from "../models/Task.Server"
 import TaskItem from "../components/TaskItem"
 import { storeType } from "../../store"
+import { testStack } from "../models/Task.Server"
 
 const styles = StyleSheet.create({
   container: {
@@ -47,72 +48,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const testTasks: Task[] = [
-  {
-    id: "base",
-    description: "aReallyLongDescripti",
-    completed: false,
-    priority: true,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "morning_1",
-    description: "task2",
-    completed: false,
-    priority: true,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "morning_2",
-    description: "task3",
-    completed: false,
-    priority: true,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "morning_3",
-    description: "task4",
-    completed: false,
-    priority: true,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "morning_4",
-    description: "task5",
-    completed: false,
-    priority: false,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "afternoon_1",
-    description: "task6",
-    completed: false,
-    priority: false,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "afternoon_2",
-    description: "task7",
-    completed: false,
-    priority: false,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-  {
-    id: "afternoon_3",
-    description: "task8",
-    completed: false,
-    priority: true,
-    timeOfDay: { startTime: new Date(0), endTime: new Date() },
-    repeating: true,
-  },
-]
 type TaskListProps = {
   store: storeType
 }
@@ -127,7 +62,7 @@ const TaskList: React.FC<TaskListProps> = () => {
       const data = await getAllTasks()
       if (data) {
         setTasks(data)
-      } else setTasks(testTasks)
+      } else setTasks(testStack)
     }
     const data = fetchData().catch(console.error)
   }, [])

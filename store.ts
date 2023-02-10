@@ -1,19 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { initialState } from "./src/reducers/ToDoListReducer"
-import RootReducer from "./src/reducers/RootReducer"
-import type { Task } from "./src/models/Task.Server"
-
-export type RootState = {
-  allTasks: Task[]
-  dailyToDoList: Task[]
-  currentToDoList: Task[]
-  currentTask: Task
-}
+import thunk from "redux-thunk"
+import toDoListReducer from "./src/reducers/toDoListSlice"
 
 const store = configureStore({
-  reducer: RootReducer,
+  reducer: {
+    todolist: toDoListReducer,
+  },
+  middleware: [thunk],
 })
 
 export default store
 
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 export type storeType = typeof store

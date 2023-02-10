@@ -12,8 +12,8 @@ export type Task = {
 }
 
 export type TimeOfDay = {
-  startTime: Date
-  endTime: Date
+  startTime: string
+  endTime: string
 }
 
 export const defaultTask: Task = {
@@ -23,7 +23,86 @@ export const defaultTask: Task = {
   priority: false,
   repeating: true,
 }
-
+export const testStack: Task[] = [
+  defaultTask,
+  {
+    id: "morning_1",
+    description: "task2",
+    completed: false,
+    priority: true,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "morning_2",
+    description: "task3",
+    completed: false,
+    priority: true,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "morning_3",
+    description: "task4",
+    completed: false,
+    priority: true,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "morning_4",
+    description: "task5",
+    completed: false,
+    priority: false,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "afternoon_1",
+    description: "task6",
+    completed: false,
+    priority: false,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "afternoon_2",
+    description: "task7",
+    completed: false,
+    priority: false,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+  {
+    id: "afternoon_3",
+    description: "task8",
+    completed: false,
+    priority: true,
+    timeOfDay: {
+      startTime: new Date(0).toString(),
+      endTime: new Date().toString(),
+    },
+    repeating: true,
+  },
+]
 export const createTask = async (task: Task): Promise<void> => {
   try {
     return await A.setItem(taskIdModifier + task.id, JSON.stringify(task))
@@ -49,7 +128,6 @@ export const getAllTasks = async () => {
   try {
     const keys = await A.getAllKeys()
     const taskKeys = keys.filter((key) => key.includes(taskIdModifier))
-    console.log(taskKeys)
     const results = await A.multiGet(taskKeys)
     const resultsWithValues: Task[] = []
     if (results && results.length > 0) {
@@ -93,15 +171,17 @@ export const getTasksForNow = (tasks: Task[]) => {
   const isInTimeRange = (task: Task) => {
     if (task.completed) return false
     if (task.timeOfDay === undefined) return true
-    if (task.timeOfDay.startTime < now && task.timeOfDay.endTime > now)
-      return true
-    if (task.timeOfDay.endTime < now && task.priority) return true
+    const startTimeAsDate = new Date(task.timeOfDay.startTime)
+    const endTimeAsDate = new Date(task.timeOfDay.endTime)
+    if (startTimeAsDate < now && endTimeAsDate > now) return true
+    if (endTimeAsDate < now && task.priority) return true
     return false
   }
   return tasks.filter(isInTimeRange)
 }
 
 export const randomizeTasks = (tasks: Task[]) => {
+  console.log(tasks)
   for (let i = tasks.length - 1; i > 0; i--) {
     let randomPos = Math.floor(Math.random() * (i + 1))
     let temp = tasks[i]
@@ -112,7 +192,8 @@ export const randomizeTasks = (tasks: Task[]) => {
 }
 
 export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
-  const index = tasks.indexOf(taskToPass)
+  const task = (e: Task) => e.id === taskToPass.id
+  const index = tasks.findIndex(task)
   tasks.splice(index, index)
   const newList = randomizeTasks(tasks)
   newList.push(taskToPass)

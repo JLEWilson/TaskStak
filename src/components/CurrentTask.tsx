@@ -40,8 +40,14 @@ const styles = StyleSheet.create({
 })
 type CurrentTaskProps = {
   task: Task
+  onPass: () => void
+  onComplete: () => void
 }
-const CurrentTask: React.FC<CurrentTaskProps> = ({ task }) => {
+const CurrentTask: React.FC<CurrentTaskProps> = ({
+  task,
+  onPass,
+  onComplete,
+}) => {
   const { colors } = useTheme()
   return (
     <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
@@ -51,10 +57,16 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({ task }) => {
         </Text>
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={[styles.button, { backgroundColor: colors.primary }]}>
+        <Pressable
+          onPress={() => onComplete()}
+          style={[styles.button, { backgroundColor: colors.primary }]}
+        >
           <Text>Complete</Text>
         </Pressable>
-        <Pressable style={[styles.button, { backgroundColor: colors.primary }]}>
+        <Pressable
+          onPress={() => onPass()}
+          style={[styles.button, { backgroundColor: colors.primary }]}
+        >
           <Text>Pass</Text>
         </Pressable>
       </View>
