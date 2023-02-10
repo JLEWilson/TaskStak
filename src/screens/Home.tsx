@@ -54,7 +54,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     setCurrentTask(newTaskList[0])
     console.log("actually passed")
   }
-
+  // now we want to conditionally render based on state
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.text, { color: colors.text }]}>Home</Text>
