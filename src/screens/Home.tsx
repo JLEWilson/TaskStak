@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
-import { useSelector } from "react-redux"
-import type { RootState, storeType } from "../../store"
+import type { storeType } from "../../store"
 import CurrentTask from "../components/CurrentTask"
-import { setCurrentTask, setCurrentToDoList } from "../actions/index"
 import { passOnTask, defaultTask, setTaskCompleted } from "../models/Task.Server"
-import { current } from "@reduxjs/toolkit"
+import { useAppSelector, useAppDispatch } from "../hooks/redux"
+import {
+  setCurrentTask,
+  setCurrentTasks,
+  ToDoListState,
+} from "../reducers/toDoListSlice"
 
 const styles = StyleSheet.create({
   container: {
@@ -26,26 +29,29 @@ const styles = StyleSheet.create({
 type HomeScreenProps = {
   store: storeType
 }
-const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
-  const currentTask = useSelector((state: RootState) => state.currentTask)
-  const currentTDL = useSelector((state: RootState) => state.currentToDoList)
+const HomeScreen: React.FC<HomeScreenProps> = () => {
+  const currentTask = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.currentTask,
+  )
+  const currentToDoList = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.currentToDoList,
+  )
   React.useEffect(() => {
     console.log(currentTask)
   }, [currentTask])
-  const displayTask = currentTask ? currentTask : defaultTask
   const { colors } = useTheme()
 
   const handleTaskCompleted = () => {
-    setTaskCompleted(displayTask)
-    const copy = currentTDL.splice(0, 1)
-    setCurrentToDoList(store, copy)
+    setTaskCompleted(currentTask)
+    const copy = currentToDoList.splice(0, 1)
+    setCurrentTasks(copy)
     const tempTask = copy.length < 0 ? copy[0] : defaultTask
-    setCurrentTask(store, tempTask)
+    setCurrentTask(tempTask)
   }
   const handleTaskPassed = () => {
-    const newTaskList = passOnTask(currentTask, currentTDL)
-    setCurrentToDoList(store, newTaskList)
-    setCurrentTask(store, newTaskList[0])
+    const newTaskList = passOnTask(currentTask, currentToDoList)
+    setCurrentTasks(newTaskList)
+    setCurrentTask(newTaskList[0])
     console.log("actually passed")
   }
 
@@ -53,7 +59,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ store }) => {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.text, { color: colors.text }]}>Home</Text>
       <CurrentTask
-        task={displayTask}
+        task={currentTask}
         onPass={handleTaskPassed}
         onComplete={handleTaskCompleted}
       />
