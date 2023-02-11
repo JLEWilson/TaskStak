@@ -42,6 +42,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const { colors } = useTheme()
 
   const handleTaskCompleted = () => {
+    if (currentTask.id === defaultTask.id) return
+
     setTaskCompleted(currentTask)
     const copy = currentToDoList.splice(0, 1)
     setCurrentTasks(copy)
@@ -49,6 +51,8 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     setCurrentTask(tempTask)
   }
   const handleTaskPassed = () => {
+    if (currentTask.id === defaultTask.id) return
+
     const newTaskList = passOnTask(currentTask, currentToDoList)
     setCurrentTasks(newTaskList)
     setCurrentTask(newTaskList[0])
