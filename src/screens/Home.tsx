@@ -36,12 +36,26 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   const currentToDoList = useAppSelector(
     (state: { todolist: ToDoListState }) => state.todolist.currentToDoList,
   )
+  const isLoadingAllTasks = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.isLoadingAllTasks,
+  )
+  const isLoadingCurrentTasks = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.isLoadingCurrent,
+  )
+  const isLoadingDailyTasks = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.isLoadingDaily,
+  )
+  const error = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.error,
+  )
   React.useEffect(() => {
     console.log(currentTask)
   }, [currentTask])
   const { colors } = useTheme()
 
   const handleTaskCompleted = () => {
+    if (currentTask.id === defaultTask.id) return
+
     setTaskCompleted(currentTask)
     const copy = currentToDoList.splice(0, 1)
     setCurrentTasks(copy)
@@ -49,12 +63,29 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
     setCurrentTask(tempTask)
   }
   const handleTaskPassed = () => {
+    if (currentTask.id === defaultTask.id) return
+
     const newTaskList = passOnTask(currentTask, currentToDoList)
     setCurrentTasks(newTaskList)
     setCurrentTask(newTaskList[0])
     console.log("actually passed")
   }
   // now we want to conditionally render based on state
+  if (isLoadingAllTasks || isLoadingCurrentTasks || isLoadingDailyTasks) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    )
+  }
+  if (error) {
+    return (
+      <View>
+        <Text>{error.name}</Text>
+        <Text>{error.message}</Text>
+      </View>
+    )
+  }
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={[styles.text, { color: colors.text }]}>Home</Text>
