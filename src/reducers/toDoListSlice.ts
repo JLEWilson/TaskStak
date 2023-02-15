@@ -24,6 +24,11 @@ const initialState: ToDoListState = {
   currentToDoList: [],
   currentTask: defaultTask,
 }
+type SliceActions<T> = {
+  [K in keyof T]: T[K] extends (...args: any[]) => infer A ? A : never
+}[keyof T]
+
+export type ActionTypes = SliceActions<typeof toDoListSlice.actions>
 
 export const toDoListSlice = createSlice({
   name: "toDoList",
