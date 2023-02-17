@@ -5,7 +5,9 @@ import {
 } from "../models/Task.Server"
 import type { AppDispatch } from "../../store"
 import * as a from "../reducers/toDoListSlice"
+import type { Task } from "../models/Task.Server"
 
+// can maybe make this more pure
 export const fetchData = () => {
   //CHANGE FROM ANY
   return async (dispatch: AppDispatch) => {
@@ -46,18 +48,14 @@ export const fetchData = () => {
   }
 }
 
-// export const setCurrentTask = (store: ToolkitStore, nextTask: Task) => {
-//   const action = {
-//     type: a.setCurrentTask,
-//     payload: nextTask,
-//   }
-//   store.dispatch(action)
-// }
+export const setCurrentTask = (nextTask: Task) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(a.setCurrentTask(nextTask))
+  }
+}
 
-// export const setCurrentToDoList = (store: ToolkitStore, newTaskList: Task[]) => {
-//   const action = {
-//     type: a.setCurrentToDoList,
-//     payload: newTaskList,
-//   }
-//   store.dispatch(action)
-// }
+export const setCurrentTasks = (taskList: Task[]) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(a.setCurrentTasks(taskList))
+  }
+}
