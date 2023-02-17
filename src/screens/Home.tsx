@@ -26,10 +26,7 @@ const styles = StyleSheet.create({
   },
 })
 
-type HomeScreenProps = {
-  store: storeType
-}
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen = () => {
   const currentTask = useAppSelector(
     (state: { todolist: ToDoListState }) => state.todolist.currentTask,
   )

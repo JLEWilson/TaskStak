@@ -48,10 +48,7 @@ const styles = StyleSheet.create({
   },
 })
 
-type TaskListProps = {
-  store: storeType
-}
-const TaskList: React.FC<TaskListProps> = () => {
+const TaskList = () => {
   const { colors } = useTheme()
   const [isModalVisible, setModalVisible] = React.useState(false)
   const [tasks, setTasks] = React.useState<Task[]>([])
