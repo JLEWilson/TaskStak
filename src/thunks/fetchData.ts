@@ -16,7 +16,7 @@ export const fetchData = () => {
     const allTasks = await getAllTasks()
     if (allTasks instanceof Error || allTasks === null) {
       // use default data maybe?
-      dispatch(a.getAllTasksFailure(new Error("There are no tasks")))
+      dispatch(a.getAllTasksFailure(new Error("There are no tasks").message))
       return
     } else {
       dispatch(a.getAllTasksSuccess(allTasks))
@@ -25,7 +25,11 @@ export const fetchData = () => {
     dispatch(a.requestDailyToDoList())
     const dailyTasks = await getTodaysTasks(allTasks)
     if (dailyTasks instanceof Error || dailyTasks.length < 1) {
-      dispatch(a.getDailyTasksFailure(new Error("There are no tasks for today")))
+      dispatch(
+        a.getDailyTasksFailure(
+          new Error("There are no tasks for today").message,
+        ),
+      )
       return
     } else {
       dispatch(a.getDailyTasksSuccess(dailyTasks))
@@ -36,7 +40,7 @@ export const fetchData = () => {
     if (currentTasks instanceof Error || dailyTasks.length < 1) {
       dispatch(
         a.getCurrentTasksFailure(
-          new Error("There are no tasks scheduled for now"),
+          new Error("There are no tasks scheduled for now").message,
         ),
       )
       return
