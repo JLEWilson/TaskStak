@@ -78,8 +78,7 @@ const HomeScreen = () => {
   if (error) {
     return (
       <View>
-        <Text>{error.name}</Text>
-        <Text>{error.message}</Text>
+        <Text>{error}</Text>
       </View>
     )
   }
