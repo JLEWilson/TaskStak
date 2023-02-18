@@ -4,7 +4,7 @@ import type { Task } from "../models/Task.Server"
 import { defaultTask } from "../models/Task.Server"
 
 export interface ToDoListState {
-  error: null | Error
+  error: null | string
   isLoadingAllTasks: boolean
   allTasks: Task[]
   isLoadingDaily: boolean
@@ -41,7 +41,7 @@ export const toDoListSlice = createSlice({
       state.isLoadingAllTasks = false
       state.allTasks = action.payload
     },
-    getAllTasksFailure: (state, action: PayloadAction<Error>) => {
+    getAllTasksFailure: (state, action: PayloadAction<string>) => {
       state.isLoadingAllTasks = false
       state.error = action.payload
     },
@@ -52,7 +52,7 @@ export const toDoListSlice = createSlice({
       state.isLoadingDaily = false
       state.dailyToDoList = action.payload
     },
-    getDailyTasksFailure: (state, action: PayloadAction<Error>) => {
+    getDailyTasksFailure: (state, action: PayloadAction<string>) => {
       state.isLoadingDaily = false
       state.error = action.payload
     },
@@ -63,7 +63,7 @@ export const toDoListSlice = createSlice({
       state.isLoadingCurrent = false
       state.currentToDoList = action.payload
     },
-    getCurrentTasksFailure: (state, action: PayloadAction<Error>) => {
+    getCurrentTasksFailure: (state, action: PayloadAction<string>) => {
       state.isLoadingCurrent = false
       state.error = action.payload
     },
