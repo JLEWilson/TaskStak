@@ -26,10 +26,7 @@ const styles = StyleSheet.create({
   },
 })
 
-type HomeScreenProps = {
-  store: storeType
-}
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen = () => {
   const currentTask = useAppSelector(
     (state: { todolist: ToDoListState }) => state.todolist.currentTask,
   )
@@ -81,8 +78,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
   if (error) {
     return (
       <View>
-        <Text>{error.name}</Text>
-        <Text>{error.message}</Text>
+        <Text>{error}</Text>
       </View>
     )
   }

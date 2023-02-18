@@ -92,8 +92,12 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
       ? props.taskToEdit.timeOfDay
       : null,
   )
-  const [startTime, setStartTime] = React.useState(time ? time.startTime : null)
-  const [endTime, setEndTime] = React.useState(time ? time.endTime : null)
+  const [startTime, setStartTime] = React.useState(
+    time ? new Date(time.startTime) : null,
+  )
+  const [endTime, setEndTime] = React.useState(
+    time ? new Date(time.endTime) : null,
+  )
   const [priority, setPriority] = React.useState(
     props.taskToEdit ? props.taskToEdit.priority : false,
   )
@@ -115,7 +119,10 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
   }
   const formSubmitHandler = () => {
     const timeOfDayInput = isTimeRangeVisible
-      ? ({ startTime: startTime, endTime: endTime } as TimeOfDay)
+      ? ({
+          startTime: startTime?.toString(),
+          endTime: endTime?.toString(),
+        } as TimeOfDay)
       : undefined
 
     const task: Task = {
@@ -186,8 +193,8 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           <TimeRange
             setStartTimeFormInput={setStartTime}
             setEndTimeFormInput={setEndTime}
-            defaultStartTime={startTime}
-            defaultEndTime={endTime}
+            defaultStartTime={startTime && startTime}
+            defaultEndTime={endTime && endTime}
           />
         )}
       </View>

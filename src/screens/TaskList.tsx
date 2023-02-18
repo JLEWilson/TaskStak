@@ -1,14 +1,13 @@
 import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native"
-import NewTaskForm, { RADIO_OPTIONS } from "../components/NewTaskForm"
+import NewTaskForm from "../components/NewTaskForm"
 import Modal from "react-native-modal"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import { getAllTasks } from "../models/Task.Server"
+import { useAppSelector, useAppDispatch } from "../hooks/redux"
+import { ToDoListState } from "../reducers/toDoListSlice"
 import type { Task } from "../models/Task.Server"
 import TaskItem from "../components/TaskItem"
-import { storeType } from "../../store"
-import { testStack } from "../models/Task.Server"
 
 const styles = StyleSheet.create({
   container: {
@@ -48,56 +47,58 @@ const styles = StyleSheet.create({
   },
 })
 
-type TaskListProps = {
-  store: storeType
-}
-const TaskList: React.FC<TaskListProps> = () => {
+const TaskList = () => {
   const { colors } = useTheme()
   const [isModalVisible, setModalVisible] = React.useState(false)
-  const [tasks, setTasks] = React.useState<Task[]>([])
+
+  const isLoadingAllTasks = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.isLoadingAllTasks,
+  )
+  const tasks = useAppSelector(
+    (state: { todolist: ToDoListState }) => state.todolist.allTasks,
+  )
+
   const [taskToEdit, setTaskToEdit] = React.useState<Task | undefined>(undefined)
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const data = await getAllTasks()
-      if (data) {
-        setTasks(data)
-      } else setTasks(testStack)
-    }
-    const data = fetchData().catch(console.error)
-  }, [])
-
-  return (
-    <View style={styles.container}>
-      <Text style={[styles.header, { color: colors.text }]}>TaskList</Text>
-      <Modal
-        style={[
-          styles.modal,
-          { backgroundColor: colors.primary, borderColor: colors.border },
-        ]}
-        isVisible={isModalVisible}
-      >
-        <NewTaskForm
-          setModalVisible={setModalVisible}
-          taskToEdit={taskToEdit}
-        ></NewTaskForm>
-      </Modal>
-      <ScrollView style={styles.taskContainer}>
-        {tasks &&
-          tasks.map((task, index) => (
-            <TaskItem
-              task={task}
-              key={index}
-              setModalVisible={setModalVisible}
-              setTaskToEdit={setTaskToEdit}
-            />
-          ))}
-      </ScrollView>
-      <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
-        <Icon name="add" size={30} color="white" />
-      </Pressable>
-    </View>
-  )
+  if (isLoadingAllTasks) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text style={[styles.header, { color: colors.text }]}>TaskList</Text>
+        <Modal
+          style={[
+            styles.modal,
+            { backgroundColor: colors.primary, borderColor: colors.border },
+          ]}
+          isVisible={isModalVisible}
+        >
+          <NewTaskForm
+            setModalVisible={setModalVisible}
+            taskToEdit={taskToEdit}
+          ></NewTaskForm>
+        </Modal>
+        <ScrollView style={styles.taskContainer}>
+          {tasks &&
+            tasks.map((task, index) => (
+              <TaskItem
+                task={task}
+                key={index}
+                setModalVisible={setModalVisible}
+                setTaskToEdit={setTaskToEdit}
+              />
+            ))}
+        </ScrollView>
+        <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
+          <Icon name="add" size={30} color="white" />
+        </Pressable>
+      </View>
+    )
+  }
 }
 
 export default TaskList
