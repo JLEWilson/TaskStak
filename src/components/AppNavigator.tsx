@@ -20,16 +20,11 @@ const MyTheme = {
   },
 }
 const Tab = createBottomTabNavigator()
-let firstLoad = true
 
 const AppNavigator = () => {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
-    if (firstLoad) {
-      firstLoad = false
-      //All Tasks
-      dispatch(fetchData())
-    }
+    dispatch(fetchData())
   }, [])
   return (
     <NavigationContainer theme={MyTheme}>
