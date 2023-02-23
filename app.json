@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.jlewilson.TaskStak"
+      "package": "com.jlewilson.TaskStak",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
