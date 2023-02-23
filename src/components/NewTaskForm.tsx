@@ -7,16 +7,17 @@ import {
   StyleSheet,
 } from "react-native"
 import React from "react"
-import MultiSlider from "@ptomasroos/react-native-multi-slider"
+import { useAppDispatch } from "../hooks/redux"
 import TimeRange from "./TimeRange"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
-import type { Task } from "../models/Task.Server"
+import { getAllTasks, Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
+import { fetchAllTasks } from "../thunks/fetchData"
 
 interface TaskFormProps {
   setModalVisible: (bool: boolean) => void
@@ -117,7 +118,8 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
     setTimeRangeVisible(false)
     setPriority(false)
   }
-  const formSubmitHandler = () => {
+  const formSubmitHandler = async () => {
+    const dispatch = useAppDispatch()
     const timeOfDayInput = isTimeRangeVisible
       ? ({
           startTime: startTime?.toString(),
@@ -135,8 +137,8 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
       weekdays: weekdays,
     }
 
-    //createTask(task)
-    console.log(task)
+    await createTask(task)
+    dispatch(fetchAllTasks)
     formResetHandler()
   }
 

@@ -51,7 +51,19 @@ export const fetchData = () => {
     dispatch(a.setCurrentTask(currentTasks[0]))
   }
 }
-
+export const fetchAllTasks = () => {
+  return async (dispatch: AppDispatch) => {
+    dispatch(a.requestAllTasks())
+    const allTasks = await getAllTasks()
+    if (allTasks instanceof Error || allTasks === null) {
+      // use default data maybe?
+      dispatch(a.getAllTasksFailure(new Error("There are no tasks").message))
+      return
+    } else {
+      dispatch(a.getAllTasksSuccess(allTasks))
+    }
+  }
+}
 export const setCurrentTask = (nextTask: Task) => {
   return (dispatch: AppDispatch) => {
     dispatch(a.setCurrentTask(nextTask))
