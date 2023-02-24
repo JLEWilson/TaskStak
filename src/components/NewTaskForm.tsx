@@ -195,8 +195,8 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
           <TimeRange
             setStartTimeFormInput={setStartTime}
             setEndTimeFormInput={setEndTime}
-            defaultStartTime={startTime && startTime}
-            defaultEndTime={endTime && endTime}
+            defaultStartTime={startTime}
+            defaultEndTime={endTime}
           />
         )}
       </View>
