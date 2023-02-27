@@ -1,7 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { RootState } from "../../store"
 import type { Task } from "../models/Task.Server"
-import { defaultTask } from "../models/Task.Server"
 
 export interface ToDoListState {
   error: null | string
@@ -11,7 +10,7 @@ export interface ToDoListState {
   dailyToDoList: Task[]
   isLoadingCurrent: boolean
   currentToDoList: Task[]
-  currentTask: Task
+  currentTask: Task | undefined
 }
 
 const initialState: ToDoListState = {
@@ -22,7 +21,7 @@ const initialState: ToDoListState = {
   dailyToDoList: [],
   isLoadingCurrent: false,
   currentToDoList: [],
-  currentTask: defaultTask,
+  currentTask: undefined,
 }
 type SliceActions<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => infer A ? A : never
@@ -35,43 +34,76 @@ export const toDoListSlice = createSlice({
   initialState,
   reducers: {
     requestAllTasks: (state) => {
-      state.isLoadingAllTasks = true
+      return {
+        ...state,
+        isLoadingAllTasks: true,
+      }
     },
     getAllTasksSuccess: (state, action: PayloadAction<Task[]>) => {
-      state.isLoadingAllTasks = false
-      state.allTasks = action.payload
+      return {
+        ...state,
+        isLoadingAllTasks: false,
+        allTasks: action.payload,
+      }
     },
     getAllTasksFailure: (state, action: PayloadAction<string>) => {
-      state.isLoadingAllTasks = false
-      state.error = action.payload
+      return {
+        ...state,
+        isLoadingAllTasks: false,
+        error: action.payload,
+      }
     },
-    requestDailyToDoList: (state) => {
-      state.isLoadingDaily = true
+    requestDailyToDoList(state) {
+      return {
+        ...state,
+        isLoadingDaily: true,
+      }
     },
-    getDailyTasksSuccess: (state, action: PayloadAction<Task[]>) => {
-      state.isLoadingDaily = false
-      state.dailyToDoList = action.payload
+    getDailyTasksSuccess(state, action: PayloadAction<Task[]>) {
+      return {
+        ...state,
+        isLoadingDaily: false,
+        dailyToDoList: action.payload,
+      }
     },
-    getDailyTasksFailure: (state, action: PayloadAction<string>) => {
-      state.isLoadingDaily = false
-      state.error = action.payload
+    getDailyTasksFailure(state, action: PayloadAction<string>) {
+      return {
+        ...state,
+        isLoadingDaily: false,
+        error: action.payload,
+      }
     },
-    requestCurrentToDoList: (state) => {
-      state.isLoadingCurrent = true
+    requestCurrentToDoList(state) {
+      return {
+        ...state,
+        isLoadingCurrent: true,
+      }
     },
-    getCurrentTasksSuccess: (state, action: PayloadAction<Task[]>) => {
-      state.isLoadingCurrent = false
-      state.currentToDoList = action.payload
+    getCurrentTasksSuccess(state, action: PayloadAction<Task[]>) {
+      return {
+        ...state,
+        isLoadingCurrent: false,
+        currentToDoList: action.payload,
+      }
     },
-    getCurrentTasksFailure: (state, action: PayloadAction<string>) => {
-      state.isLoadingCurrent = false
-      state.error = action.payload
+    getCurrentTasksFailure(state, action: PayloadAction<string>) {
+      return {
+        ...state,
+        isLoadingCurrent: false,
+        error: action.payload,
+      }
     },
-    setCurrentTasks: (state, action: PayloadAction<Task[]>) => {
-      state.currentToDoList = action.payload
+    setCurrentTasks(state, action: PayloadAction<Task[]>) {
+      return {
+        ...state,
+        currentToDoList: action.payload,
+      }
     },
-    setCurrentTask: (state, action: PayloadAction<Task>) => {
-      state.currentTask = action.payload
+    setCurrentTask(state, action: PayloadAction<Task | undefined>) {
+      return {
+        ...state,
+        currentTask: action.payload,
+      }
     },
   },
 })
