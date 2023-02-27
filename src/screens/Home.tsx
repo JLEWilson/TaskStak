@@ -1,20 +1,17 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
-import type { storeType } from "../../store"
+import type { Task } from "../models/Task.Server"
 import CurrentTask from "../components/CurrentTask"
-import { passOnTask, defaultTask, setTaskCompleted } from "../models/Task.Server"
+import { passOnTask, setTaskCompleted } from "../models/Task.Server"
 import { useAppSelector, useAppDispatch } from "../hooks/redux"
-import {
-  setCurrentTask,
-  setCurrentTasks,
-  ToDoListState,
-} from "../reducers/toDoListSlice"
+import { setCurrentTask, setCurrentTasks } from "../reducers/toDoListSlice"
+import NoTasksMessage from "../components/NoTasksMessage"
+import { RootState } from "../../store"
 
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    //flex: 1,
     flexDirection: "column",
   },
   buttonContainer: {
@@ -28,44 +25,41 @@ const styles = StyleSheet.create({
 
 const HomeScreen = () => {
   const currentTask = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.currentTask,
+    (state: RootState) => state.todolist.currentTask,
   )
   const currentToDoList = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.currentToDoList,
+    (state: RootState) => state.todolist.currentToDoList,
   )
   const isLoadingAllTasks = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.isLoadingAllTasks,
+    (state: RootState) => state.todolist.isLoadingAllTasks,
   )
   const isLoadingCurrentTasks = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.isLoadingCurrent,
+    (state: RootState) => state.todolist.isLoadingCurrent,
   )
   const isLoadingDailyTasks = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.isLoadingDaily,
+    (state: RootState) => state.todolist.isLoadingDaily,
   )
-  const error = useAppSelector(
-    (state: { todolist: ToDoListState }) => state.todolist.error,
-  )
-  React.useEffect(() => {
-    console.log(currentTask)
-  }, [currentTask])
+  const error = useAppSelector((state: RootState) => state.todolist.error)
+  const dispatch = useAppDispatch()
   const { colors } = useTheme()
 
-  const handleTaskCompleted = () => {
-    if (currentTask.id === defaultTask.id) return
-
-    setTaskCompleted(currentTask)
-    const copy = currentToDoList.splice(0, 1)
-    setCurrentTasks(copy)
-    const tempTask = copy.length < 0 ? copy[0] : defaultTask
-    setCurrentTask(tempTask)
+  const handleTaskCompleted = (task: Task) => {
+    setTaskCompleted(task)
+    if (currentToDoList.length <= 1) return
+    const copy = [...currentToDoList]
+    const tempTask = copy.shift()
+    dispatch(setCurrentTasks(copy))
+    dispatch(setCurrentTask(tempTask))
+    console.log("complete")
+    console.log("currentTask")
+    console.log(currentTask)
   }
-  const handleTaskPassed = () => {
-    if (currentTask.id === defaultTask.id) return
-
-    const newTaskList = passOnTask(currentTask, currentToDoList)
+  const handleTaskPassed = (task: Task) => {
+    const newTaskList = passOnTask(task, [...currentToDoList])
     setCurrentTasks(newTaskList)
-    setCurrentTask(newTaskList[0])
-    console.log("actually passed")
+    const tempTask = newTaskList.shift()
+    dispatch(setCurrentTask(tempTask))
+    console.log("passed")
   }
   // now we want to conditionally render based on state
   if (isLoadingAllTasks || isLoadingCurrentTasks || isLoadingDailyTasks) {
@@ -82,17 +76,19 @@ const HomeScreen = () => {
       </View>
     )
   }
-  return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.text, { color: colors.text }]}>Home</Text>
-      <CurrentTask
-        task={currentTask}
-        onPass={handleTaskPassed}
-        onComplete={handleTaskCompleted}
-      />
-      <View></View>
-    </View>
-  )
+  if (currentTask) {
+    return (
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <Text style={[styles.text, { color: colors.text }]}>Home</Text>
+        <CurrentTask
+          task={currentTask}
+          onPass={handleTaskPassed}
+          onComplete={handleTaskCompleted}
+        />
+        <View></View>
+      </View>
+    )
+  } else return <NoTasksMessage />
 }
 
 export default HomeScreen
