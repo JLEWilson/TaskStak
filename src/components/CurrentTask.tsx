@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
 })
 type CurrentTaskProps = {
   task: Task
-  onPass: () => void
-  onComplete: () => void
+  onPass: (task: Task) => void
+  onComplete: (task: Task) => void
 }
 const CurrentTask: React.FC<CurrentTaskProps> = ({
   task,
@@ -58,13 +58,13 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
       </View>
       <View style={styles.buttonContainer}>
         <Pressable
-          onPress={() => onComplete()}
+          onPress={() => onComplete(task)}
           style={[styles.button, { backgroundColor: colors.primary }]}
         >
           <Text>Complete</Text>
         </Pressable>
         <Pressable
-          onPress={() => onPass()}
+          onPress={() => onPass(task)}
           style={[styles.button, { backgroundColor: colors.primary }]}
         >
           <Text>Pass</Text>
