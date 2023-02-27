@@ -181,7 +181,6 @@ export const getTasksForNow = (tasks: Task[]) => {
 }
 
 export const randomizeTasks = (tasks: Task[]) => {
-  console.log(tasks)
   for (let i = tasks.length - 1; i > 0; i--) {
     let randomPos = Math.floor(Math.random() * (i + 1))
     let temp = tasks[i]
@@ -193,9 +192,10 @@ export const randomizeTasks = (tasks: Task[]) => {
 
 export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
   const task = (e: Task) => e.id === taskToPass.id
-  const index = tasks.findIndex(task)
-  tasks.splice(index, index)
-  const newList = randomizeTasks(tasks)
+  const copy = [...tasks]
+  const index = copy.findIndex(task)
+  copy.splice(index, 1)
+  const newList = randomizeTasks(copy)
   newList.push(taskToPass)
   return newList
 }
