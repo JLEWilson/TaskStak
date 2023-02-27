@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid"
 import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
 import { fetchAllTasks } from "../thunks/fetchData"
+import { AppDispatch } from "../../store"
 
 interface TaskFormProps {
   setModalVisible: (bool: boolean) => void
@@ -84,6 +85,7 @@ const styles = StyleSheet.create({
 })
 export const RADIO_OPTIONS = ["Any", "Morning", "Afternoon", "Evening", "Night"]
 const TaskForm: React.FC<TaskFormProps> = (props) => {
+  const dispatch = useAppDispatch()
   const { colors } = useTheme()
   const [description, setDescription] = React.useState(
     props.taskToEdit ? props.taskToEdit?.description : "Do The Dishes",
@@ -118,8 +120,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
     setTimeRangeVisible(false)
     setPriority(false)
   }
-  const formSubmitHandler = async () => {
-    const dispatch = useAppDispatch()
+  const formSubmitHandler = async (dispatch: AppDispatch) => {
     const timeOfDayInput = isTimeRangeVisible
       ? ({
           startTime: startTime?.toString(),
@@ -138,7 +139,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
     }
 
     await createTask(task)
-    dispatch(fetchAllTasks)
+    dispatch(fetchAllTasks())
     formResetHandler()
   }
 
@@ -202,7 +203,7 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
       </View>
       <Pressable
         style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => formSubmitHandler()}
+        onPress={() => formSubmitHandler(dispatch)}
       >
         <Text style={[styles.buttonText, { color: colors.border }]}>
           Add new Task
