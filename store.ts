@@ -1,11 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit"
 import toDoListReducer from "./src/reducers/toDoListSlice"
 import type { ThunkAction, AnyAction } from "@reduxjs/toolkit"
+import logger from "redux-logger"
 
 const store = configureStore({
   reducer: {
     todolist: toDoListReducer,
   },
+  middleware: (getDefaultMIddleware) => getDefaultMIddleware().concat(logger),
 })
 
 export default store
