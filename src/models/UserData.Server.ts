@@ -2,8 +2,8 @@ import A from "@react-native-async-storage/async-storage"
 import { userIdModifier } from "./Globals.Models"
 
 export type UserData = {
-  createdAt: Date
-  lastSignIn: Date
+  createdAt: string | undefined
+  lastSignIn: string | undefined
 }
 export const getUserData = async () => {
   try {
@@ -11,7 +11,7 @@ export const getUserData = async () => {
     if (data) {
       return JSON.parse(data) as UserData
     }
-    return null
+    return undefined
   } catch (err) {
     throw err
   }
@@ -19,8 +19,8 @@ export const getUserData = async () => {
 export const createUserData = async () => {
   const now = new Date()
   const userData: UserData = {
-    createdAt: now,
-    lastSignIn: now,
+    createdAt: now.toString(),
+    lastSignIn: now.toString(),
   }
   try {
     return await A.setItem(userIdModifier, JSON.stringify(userData))
@@ -33,7 +33,7 @@ export const updateSignInDate = async () => {
     const userData = await getUserData()
     if (userData) {
       const now = new Date()
-      userData.lastSignIn = now
+      userData.lastSignIn = now.toString()
       A.setItem(userIdModifier, JSON.stringify(userData))
     }
     return null
