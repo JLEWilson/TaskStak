@@ -43,16 +43,15 @@ const HomeScreen = () => {
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
 
+  const loading =
+    isLoadingAllTasks || isLoadingCurrentTasks || isLoadingDailyTasks
+
   const handleTaskCompleted = (task: Task) => {
     setTaskCompleted(task)
-    if (currentToDoList.length <= 1) return
     const copy = [...currentToDoList]
     const tempTask = copy.shift()
     dispatch(setCurrentTasks(copy))
     dispatch(setCurrentTask(tempTask))
-    console.log("complete")
-    console.log("currentTask")
-    console.log(currentTask)
   }
   const handleTaskPassed = (task: Task) => {
     const newTaskList = passOnTask(task, [...currentToDoList])
@@ -62,7 +61,7 @@ const HomeScreen = () => {
     console.log("passed")
   }
   // now we want to conditionally render based on state
-  if (isLoadingAllTasks || isLoadingCurrentTasks || isLoadingDailyTasks) {
+  if (loading) {
     return (
       <View>
         <Text>Loading...</Text>
