@@ -28,7 +28,14 @@ export type ActionTypes = SliceActions<typeof userSlice.actions>
 export const userSlice = createSlice({
   name: "toDoList",
   initialState,
-  reducers: {},
+  reducers: {
+    setUserData: (state, action) => {
+      return {
+        ...state,
+        timeStamps: action.payload,
+      }
+    },
+  },
 })
 
 export const {} = userSlice.actions
