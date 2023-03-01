@@ -36,6 +36,21 @@ export const userSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserData.pending, (state, action) => {
+      return { ...state, loading: "pending" }
+    }),
+      builder.addCase(fetchUserData.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: "succeeded",
+          timeStamps: action.payload,
+        }
+      }),
+      builder.addCase(fetchUserData.rejected, (state, action) => {
+        return { ...state, loading: "failed" }
+      })
+  },
 })
 
 export const {} = userSlice.actions
