@@ -5,7 +5,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import { NavigationContainer } from "@react-navigation/native"
 import { StyleSheet } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { fetchData } from "../thunks/fetchData"
+import { fetchAllTasks } from "../thunks/fetchData"
 import { useAppDispatch } from "../hooks/redux"
 
 const MyTheme = {
@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator()
 const AppNavigator = () => {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
-    dispatch(fetchData())
+    dispatch(fetchAllTasks())
   }, [])
   return (
     <NavigationContainer theme={MyTheme}>
