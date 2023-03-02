@@ -59,7 +59,10 @@ const TaskList = () => {
   )
 
   const [taskToEdit, setTaskToEdit] = React.useState<Task | undefined>(undefined)
-
+  const handleNewTaskForm = () => {
+    setModalVisible(true)
+    setTaskToEdit(undefined)
+  }
   if (isLoadingAllTasks) {
     return (
       <View>
@@ -93,7 +96,7 @@ const TaskList = () => {
               />
             ))}
         </ScrollView>
-        <Pressable style={styles.add} onPress={() => setModalVisible(true)}>
+        <Pressable style={styles.add} onPress={() => handleNewTaskForm()}>
           <Icon name="add" size={30} color="white" />
         </Pressable>
       </View>
