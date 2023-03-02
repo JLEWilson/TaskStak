@@ -6,9 +6,6 @@ export interface ToDoListState {
   error: null | string
   isLoadingAllTasks: boolean
   allTasks: Task[]
-  isLoadingDaily: boolean
-  dailyToDoList: Task[]
-  isLoadingCurrent: boolean
   currentToDoList: Task[]
   currentTask: Task | undefined
 }
@@ -17,9 +14,6 @@ const initialState: ToDoListState = {
   error: null,
   isLoadingAllTasks: false,
   allTasks: [],
-  isLoadingDaily: false,
-  dailyToDoList: [],
-  isLoadingCurrent: false,
   currentToDoList: [],
   currentTask: undefined,
 }
@@ -28,6 +22,8 @@ type SliceActions<T> = {
 }[keyof T]
 
 export type ActionTypes = SliceActions<typeof toDoListSlice.actions>
+
+// Re do this to use createAsyncThunk
 
 export const toDoListSlice = createSlice({
   name: "toDoList",
@@ -53,46 +49,6 @@ export const toDoListSlice = createSlice({
         error: action.payload,
       }
     },
-    requestDailyToDoList(state) {
-      return {
-        ...state,
-        isLoadingDaily: true,
-      }
-    },
-    getDailyTasksSuccess(state, action: PayloadAction<Task[]>) {
-      return {
-        ...state,
-        isLoadingDaily: false,
-        dailyToDoList: action.payload,
-      }
-    },
-    getDailyTasksFailure(state, action: PayloadAction<string>) {
-      return {
-        ...state,
-        isLoadingDaily: false,
-        error: action.payload,
-      }
-    },
-    requestCurrentToDoList(state) {
-      return {
-        ...state,
-        isLoadingCurrent: true,
-      }
-    },
-    getCurrentTasksSuccess(state, action: PayloadAction<Task[]>) {
-      return {
-        ...state,
-        isLoadingCurrent: false,
-        currentToDoList: action.payload,
-      }
-    },
-    getCurrentTasksFailure(state, action: PayloadAction<string>) {
-      return {
-        ...state,
-        isLoadingCurrent: false,
-        error: action.payload,
-      }
-    },
     setCurrentTasks(state, action: PayloadAction<Task[]>) {
       return {
         ...state,
@@ -112,12 +68,6 @@ export const {
   requestAllTasks,
   getAllTasksSuccess,
   getAllTasksFailure,
-  requestDailyToDoList,
-  getDailyTasksSuccess,
-  getDailyTasksFailure,
-  requestCurrentToDoList,
-  getCurrentTasksSuccess,
-  getCurrentTasksFailure,
   setCurrentTasks,
   setCurrentTask,
 } = toDoListSlice.actions
