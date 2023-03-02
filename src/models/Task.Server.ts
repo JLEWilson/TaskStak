@@ -117,7 +117,6 @@ export const getTask = async (id: Task["id"]): Promise<Task | null> => {
     if (result) {
       return JSON.parse(result) as Task
     }
-
     return null
   } catch (err) {
     throw err
@@ -130,13 +129,12 @@ export const getAllTasks = async () => {
     const taskKeys = keys.filter((key) => key.includes(taskIdModifier))
     const results = await A.multiGet(taskKeys)
     const resultsWithValues: Task[] = []
-    if (results && results.length > 0) {
+    if (results) {
       results.map((req) =>
         req[1] ? resultsWithValues.push(JSON.parse(req[1]) as Task) : null,
       )
-      return resultsWithValues
     }
-    return null
+    return resultsWithValues
   } catch (err) {
     throw err
   }
@@ -157,7 +155,7 @@ export const deleteTask = async (id: Task["id"]) => {
 /_______  / \____/  |__|    |__|  |__||___|  / \___  / 
         \/                                 \/ /_____/             
 */
-export const getTodaysTasks = async (tasks: Task[]) => {
+export const getTodaysTasks = (tasks: Task[]) => {
   //getDay is 0-6 Sun - Sat, WeekdayPicker is 1-7 Sun - Sat
   const today = new Date().getDay()
   const isForToday = (task: Task) => {
