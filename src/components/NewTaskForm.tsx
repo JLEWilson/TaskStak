@@ -11,7 +11,7 @@ import { useAppDispatch } from "../hooks/redux"
 import TimeRange from "./TimeRange"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
-import { deleteTask, Task } from "../models/Task.Server"
+import { deleteTask, updateTask, Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
@@ -117,14 +117,18 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
     taskToEdit && taskToEdit.timeOfDay ? true : false,
   )
-  const buttonText = taskToEdit !== undefined ? "Update Task" : "Add New Task"
-  const formResetHandler = () => {
+
+  const handleFormReset = () => {
     setModalVisible(false)
     setIsRepeating(false)
     setTimeRangeVisible(false)
     setPriority(false)
   }
-  const formSubmitHandler = async () => {
+
+  const handleFormSubmit = async (
+    databasePromise: (task: Task) => Promise<void>,
+    task?: Task,
+  ) => {
     const timeOfDayInput = isTimeRangeVisible
       ? ({
           startTime: startTime?.toString(),
@@ -132,29 +136,52 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
         } as TimeOfDay)
       : undefined
 
-    const task: Task = {
-      id: uuidv4(),
+    const tempTask: Task = {
+      id: task ? task.id : uuidv4(),
       description: description,
-      completed: false,
+      completed: task ? task.completed : false,
       priority: priority,
       timeOfDay: timeOfDayInput,
       repeating: isRepeating,
       weekdays: weekdays,
     }
 
-    await createTask(task)
+    await databasePromise(tempTask)
     dispatch(fetchAllTasks())
-    formResetHandler()
+    handleFormReset()
   }
+
   const handleDeleteTask = async () => {
     if (!taskToEdit) return
     await deleteTask(taskToEdit.id)
     dispatch(fetchAllTasks())
-    formResetHandler()
+    handleFormReset()
   }
+
+  //There is the option of creating a custom component for this button, but I was unable how to figure out the onPress function as a paremeter
+  const button = taskToEdit ? (
+    <Pressable
+      style={[styles.button, { backgroundColor: colors.primary }]}
+      onPress={() => handleFormSubmit(updateTask, taskToEdit)}
+    >
+      <Text style={[styles.buttonText, { color: colors.border }]}>
+        Update Task
+      </Text>
+    </Pressable>
+  ) : (
+    <Pressable
+      style={[styles.button, { backgroundColor: colors.primary }]}
+      onPress={() => handleFormSubmit(createTask)}
+    >
+      <Text style={[styles.buttonText, { color: colors.border }]}>
+        Add New Task
+      </Text>
+    </Pressable>
+  )
+
   return (
     <View style={[styles.container, { backgroundColor: colors.notification }]}>
-      <Pressable onPress={() => formResetHandler()} style={styles.cancel}>
+      <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
         <Icon name="close" color="#900" size={30} />
       </Pressable>
       {taskToEdit && (
@@ -215,14 +242,7 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           />
         )}
       </View>
-      <Pressable
-        style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => formSubmitHandler()}
-      >
-        <Text style={[styles.buttonText, { color: colors.border }]}>
-          {buttonText}
-        </Text>
-      </Pressable>
+      {button}
     </View>
   )
 }
