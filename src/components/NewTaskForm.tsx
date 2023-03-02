@@ -11,16 +11,15 @@ import { useAppDispatch } from "../hooks/redux"
 import TimeRange from "./TimeRange"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
-import { getAllTasks, Task } from "../models/Task.Server"
+import { deleteTask, Task } from "../models/Task.Server"
 import { createTask } from "../models/Task.Server"
 import "react-native-get-random-values"
 import { v4 as uuidv4 } from "uuid"
 import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
 import { fetchAllTasks } from "../thunks/fetchData"
-import { AppDispatch } from "../../store"
 
-interface TaskFormProps {
+interface TaskForm {
   setModalVisible: (bool: boolean) => void
   taskToEdit?: Task
 }
@@ -59,8 +58,15 @@ const styles = StyleSheet.create({
   },
   cancel: {
     position: "absolute",
-    left: 5,
-    top: 5,
+    left: 2,
+    top: 2,
+    padding: 5,
+  },
+  delete: {
+    position: "absolute",
+    right: 2,
+    top: 2,
+    padding: 5,
   },
   add: {
     position: "absolute",
@@ -84,16 +90,14 @@ const styles = StyleSheet.create({
   },
 })
 export const RADIO_OPTIONS = ["Any", "Morning", "Afternoon", "Evening", "Night"]
-const TaskForm: React.FC<TaskFormProps> = (props) => {
+const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
   const [description, setDescription] = React.useState(
-    props.taskToEdit ? props.taskToEdit?.description : "Do The Dishes",
+    taskToEdit ? taskToEdit?.description : "Do The Dishes",
   )
   const [time, setTime] = React.useState(
-    props.taskToEdit && props.taskToEdit.timeOfDay
-      ? props.taskToEdit.timeOfDay
-      : null,
+    taskToEdit && taskToEdit.timeOfDay ? taskToEdit.timeOfDay : null,
   )
   const [startTime, setStartTime] = React.useState(
     time ? new Date(time.startTime) : null,
@@ -102,25 +106,25 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
     time ? new Date(time.endTime) : null,
   )
   const [priority, setPriority] = React.useState(
-    props.taskToEdit ? props.taskToEdit.priority : false,
+    taskToEdit ? taskToEdit.priority : false,
   )
   const [weekdays, setWeekdays] = React.useState(
-    props.taskToEdit ? props.taskToEdit.weekdays : [-1],
+    taskToEdit ? taskToEdit.weekdays : [-1],
   )
   const [isRepeating, setIsRepeating] = React.useState(
-    props.taskToEdit ? props.taskToEdit.repeating : false,
+    taskToEdit ? taskToEdit.repeating : false,
   )
   const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
-    props.taskToEdit && props.taskToEdit.timeOfDay ? true : false,
+    taskToEdit && taskToEdit.timeOfDay ? true : false,
   )
-
+  const buttonText = taskToEdit !== undefined ? "Update Task" : "Add New Task"
   const formResetHandler = () => {
-    props.setModalVisible(false)
+    setModalVisible(false)
     setIsRepeating(false)
     setTimeRangeVisible(false)
     setPriority(false)
   }
-  const formSubmitHandler = async (dispatch: AppDispatch) => {
+  const formSubmitHandler = async () => {
     const timeOfDayInput = isTimeRangeVisible
       ? ({
           startTime: startTime?.toString(),
@@ -142,12 +146,22 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
     dispatch(fetchAllTasks())
     formResetHandler()
   }
-
+  const handleDeleteTask = async () => {
+    if (!taskToEdit) return
+    await deleteTask(taskToEdit.id)
+    dispatch(fetchAllTasks())
+    formResetHandler()
+  }
   return (
     <View style={[styles.container, { backgroundColor: colors.notification }]}>
       <Pressable onPress={() => formResetHandler()} style={styles.cancel}>
         <Icon name="close" color="#900" size={30} />
       </Pressable>
+      {taskToEdit && (
+        <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
+          <Icon name="delete" color="#900" size={30} />
+        </Pressable>
+      )}
       <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
       <View style={styles.innerContainer}>
         <View style={{ marginTop: 15 }}>
@@ -203,10 +217,10 @@ const TaskForm: React.FC<TaskFormProps> = (props) => {
       </View>
       <Pressable
         style={[styles.button, { backgroundColor: colors.primary }]}
-        onPress={() => formSubmitHandler(dispatch)}
+        onPress={() => formSubmitHandler()}
       >
         <Text style={[styles.buttonText, { color: colors.border }]}>
-          Add new Task
+          {buttonText}
         </Text>
       </Pressable>
     </View>
