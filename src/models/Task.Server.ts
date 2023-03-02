@@ -111,13 +111,13 @@ export const createTask = async (task: Task): Promise<void> => {
   }
 }
 
-export const getTask = async (id: Task["id"]): Promise<Task | null> => {
+export const getTask = async (id: Task["id"]): Promise<Task | undefined> => {
   try {
     const result = await A.getItem(taskIdModifier + id)
     if (result) {
       return JSON.parse(result) as Task
     }
-    return null
+    return undefined
   } catch (err) {
     throw err
   }
@@ -131,7 +131,7 @@ export const getAllTasks = async () => {
     const resultsWithValues: Task[] = []
     if (results) {
       results.map((req) =>
-        req[1] ? resultsWithValues.push(JSON.parse(req[1]) as Task) : null,
+        req[1] ? resultsWithValues.push(JSON.parse(req[1]) as Task) : undefined,
       )
     }
     return resultsWithValues
@@ -143,6 +143,14 @@ export const getAllTasks = async () => {
 export const deleteTask = async (id: Task["id"]) => {
   try {
     return await A.removeItem(taskIdModifier + id)
+  } catch (err) {
+    throw err
+  }
+}
+
+export const updateTask = async (task: Task) => {
+  try {
+    return await A.mergeItem(taskIdModifier + task["id"], JSON.stringify(task))
   } catch (err) {
     throw err
   }
