@@ -1,22 +1,10 @@
-import type { NativeStackScreenProps } from "@react-navigation/native-stack"
-
-// type RootStackParamList = {
-//   Home: undefined
-//   TaskList: undefined
-// }
-
-// export type NavigatorProps = NativeStackScreenProps<
-//   RootStackParamList,
-//   "Home",
-//   "TaskList"
-// >
-
 export const addNumbers = (...args: number[]): number => {
   return args.reduce(
     (runningTotal, currentValue) => runningTotal + currentValue,
     0,
   )
 }
+// minutes returning NaN
 export const formatAMPM = (date: Date) => {
   let hours = date.getHours()
   let minutes = date.getMinutes()
