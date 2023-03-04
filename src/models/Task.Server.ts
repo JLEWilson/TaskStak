@@ -174,14 +174,18 @@ export const getTodaysTasks = (tasks: Task[]) => {
 
 export const getTasksForNow = (tasks: Task[]) => {
   const now = new Date()
+  const currentTime = now.getHours() * 60 + now.getMinutes()
   const isInTimeRange = (task: Task) => {
     if (task.completed) return false
     if (task.timeOfDay === undefined) return true
     const startTimeAsDate = new Date(task.timeOfDay.startTime)
+    const startTime =
+      startTimeAsDate.getHours() * 60 + startTimeAsDate.getMinutes()
     const endTimeAsDate = new Date(task.timeOfDay.endTime)
-    if (startTimeAsDate < now && endTimeAsDate > now) return true
-    if (endTimeAsDate < now && task.priority) return true
-    return false
+    const endTime = endTimeAsDate.getHours() * 60 + endTimeAsDate.getMinutes()
+
+    if (startTime <= currentTime && endTime > currentTime) return true
+    if (endTime < currentTime && task.priority) return true
   }
   return tasks.filter(isInTimeRange)
 }
