@@ -94,17 +94,13 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
   const [description, setDescription] = React.useState(
-    taskToEdit ? taskToEdit?.description : "Do The Dishes",
+    taskToEdit ? taskToEdit?.description : "",
   )
   const [time, setTime] = React.useState(
     taskToEdit && taskToEdit.timeOfDay ? taskToEdit.timeOfDay : null,
   )
-  const [startTime, setStartTime] = React.useState(
-    time ? new Date(time.startTime) : null,
-  )
-  const [endTime, setEndTime] = React.useState(
-    time ? new Date(time.endTime) : null,
-  )
+  const [startTime, setStartTime] = React.useState(time ? time.startTime : null)
+  const [endTime, setEndTime] = React.useState(time ? time.endTime : null)
   const [priority, setPriority] = React.useState(
     taskToEdit ? taskToEdit.priority : false,
   )
@@ -131,8 +127,8 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   ) => {
     const timeOfDayInput = isTimeRangeVisible
       ? ({
-          startTime: startTime?.toString(),
-          endTime: endTime?.toString(),
+          startTime: startTime,
+          endTime: endTime,
         } as TimeOfDay)
       : undefined
 
@@ -197,9 +193,9 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           </Text>
           <TextInput
             style={[styles.textInput, { backgroundColor: colors.primary }]}
-            defaultValue={description}
+            placeholder={description}
             maxLength={20}
-            onChangeText={(text) => setDescription(text)}
+            onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
           />
         </View>
         <View style={styles.propertyContainer}>
@@ -222,7 +218,12 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           />
         </View>
         <View style={{ marginTop: 0 }}>
-          {isRepeating && <WeekdaySelect setWeekdayFormData={setWeekdays} />}
+          {isRepeating && (
+            <WeekdaySelect
+              setWeekdayFormData={setWeekdays}
+              taskToEdit={taskToEdit}
+            />
+          )}
         </View>
         <View style={styles.propertyContainer}>
           <Text style={[styles.label, { color: colors.text }]}>TimeRange</Text>
