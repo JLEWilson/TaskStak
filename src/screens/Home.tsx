@@ -1,7 +1,12 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
-import { getTasksForNow, getTodaysTasks, Task } from "../models/Task.Server"
+import {
+  getTask,
+  getTasksForNow,
+  getTodaysTasks,
+  Task,
+} from "../models/Task.Server"
 import CurrentTask from "../components/CurrentTask"
 import { passOnTask, setTaskCompleted } from "../models/Task.Server"
 import { useAppSelector, useAppDispatch } from "../hooks/redux"
@@ -38,35 +43,29 @@ const HomeScreen = () => {
   const error = useAppSelector((state: RootState) => state.todolist.error)
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
-
   React.useEffect(() => {
-    console.log("useEffect 1")
-    console.log(allTasks.length)
-    if (allTasks.length > 0) {
-      dispatch(setCurrentTasks(getTasksForNow(getTodaysTasks(allTasks))))
-    }
-  }, [allTasks, dispatch])
+    const tasksForToday = getTodaysTasks(allTasks)
+    const tasksForNow = getTasksForNow(tasksForToday)
+    dispatch(setCurrentTasks(tasksForNow))
+  }, [allTasks])
   React.useEffect(() => {
     if (currentToDoList.length > 0) {
       dispatch(setCurrentTask(currentToDoList[0]))
     }
-  }, [currentToDoList, dispatch])
+  }, [currentToDoList])
   const handleTaskCompleted = (task: Task) => {
     setTaskCompleted(task)
     const copy = [...currentToDoList]
     const tempTask = copy.shift()
     dispatch(setCurrentTasks(copy))
     dispatch(setCurrentTask(tempTask))
-    console.log("completed")
   }
   const handleTaskPassed = (task: Task) => {
     const newTaskList = passOnTask(task, [...currentToDoList])
     setCurrentTasks(newTaskList)
     const tempTask = newTaskList.shift()
     dispatch(setCurrentTask(tempTask))
-    console.log("passed")
   }
-  // now we want to conditionally render based on state
   if (isLoadingAllTasks) {
     return (
       <View>
