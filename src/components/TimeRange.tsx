@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
 type TimeRangeProps = {
   setStartTimeFormInput: Function
   setEndTimeFormInput: Function
-  defaultStartTime: Date | null
-  defaultEndTime: Date | null
+  defaultStartTime: string | null
+  defaultEndTime: string | null
 }
 
 const TimeRange: React.FC<TimeRangeProps> = ({
@@ -37,7 +37,9 @@ const TimeRange: React.FC<TimeRangeProps> = ({
   defaultEndTime,
 }) => {
   const [startTime, setStartTime] = React.useState<Date>(
-    defaultStartTime ? defaultStartTime : new Date("01/01/2022 06:00 AM"),
+    defaultStartTime
+      ? new Date(defaultStartTime)
+      : new Date("01/01/2022 06:00 AM"),
   )
   const [showStart, setShowStart] = React.useState(false)
   const onStartTimeChange = (
@@ -57,7 +59,7 @@ const TimeRange: React.FC<TimeRangeProps> = ({
     }
   }
   const [endTime, setEndTime] = React.useState<Date>(
-    defaultEndTime ? defaultEndTime : new Date("01/01/2022 10:00 PM"),
+    defaultEndTime ? new Date(defaultEndTime) : new Date("01/01/2022 10:00 PM"),
   )
   const [showEnd, setShowEnd] = React.useState(false)
   const onEndTimeChange = (
