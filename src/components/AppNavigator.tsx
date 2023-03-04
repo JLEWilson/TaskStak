@@ -7,7 +7,7 @@ import { StyleSheet } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { fetchAllTasks } from "../thunks/fetchData"
 import { useAppDispatch } from "../hooks/redux"
-
+import { StatusBar, StatusBarProps } from "react-native"
 const MyTheme = {
   dark: true,
   colors: {
@@ -19,6 +19,7 @@ const MyTheme = {
     notification: "#fcd4e4", //Modal Background
   },
 }
+
 const Tab = createBottomTabNavigator()
 
 const AppNavigator = () => {
@@ -28,6 +29,7 @@ const AppNavigator = () => {
   }, [])
   return (
     <NavigationContainer theme={MyTheme}>
+      <StatusBar backgroundColor={MyTheme.colors.background} />
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
