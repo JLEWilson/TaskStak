@@ -2,9 +2,11 @@ import { useTheme } from "@react-navigation/native"
 import React, { FC } from "react"
 import { StyleSheet } from "react-native"
 import { DayPicker } from "react-native-picker-weekday"
+import type { Task } from "../models/Task.Server"
 
 type WeekdaySelectProps = {
   setWeekdayFormData: (days: number[]) => void
+  taskToEdit?: Task
 }
 
 const styles = StyleSheet.create({
@@ -15,8 +17,13 @@ const styles = StyleSheet.create({
   },
 })
 
-const WeekdaySelect: FC<WeekdaySelectProps> = ({ setWeekdayFormData }) => {
-  const [weekdays, setWeekdays] = React.useState([-1])
+const WeekdaySelect: FC<WeekdaySelectProps> = ({
+  setWeekdayFormData,
+  taskToEdit,
+}) => {
+  const [weekdays, setWeekdays] = React.useState(
+    taskToEdit?.weekdays ? taskToEdit.weekdays : [-1],
+  )
   const { colors } = useTheme()
   React.useEffect(() => {
     setWeekdayFormData(weekdays)
