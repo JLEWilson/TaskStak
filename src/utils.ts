@@ -1,3 +1,29 @@
+import type { Task } from "./models/Task.Server"
+export interface SVGProps {
+  height: number
+  width: number
+  fill: string
+  opacity: number
+  strokeWidth: number
+  margin?: {
+    marginTop?: number
+    marginRight?: number
+    marginBottom?: number
+    marginLeft?: number
+  }
+  position?: {
+    top?: number
+    right?: number
+    bottom?: number
+    left?: number
+  }
+  children?: React.ReactNode
+}
+
+export interface SVGButtonProps extends SVGProps {
+  onPress: (task: Task) => void
+  task: Task
+}
 export const addNumbers = (...args: number[]): number => {
   return args.reduce(
     (runningTotal, currentValue) => runningTotal + currentValue,
