@@ -30,13 +30,14 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   modal: {
-    marginTop: 150,
-    marginHorizontal: 0,
+    marginTop: 100,
+    marginRight: 0,
+    marginLeft: 0,
     marginBottom: 0,
     borderRadius: 5,
     borderStyle: "solid",
     borderWidth: 2,
-    padding: 0,
+    padding: 5,
   },
   taskContainer: {
     marginTop: 5,
@@ -74,6 +75,11 @@ const TaskList = () => {
       <View style={styles.container}>
         <Text style={[styles.header, { color: colors.text }]}>TaskList</Text>
         <Modal
+          backdropOpacity={0.3}
+          animationIn={"bounceInUp"}
+          animationInTiming={700}
+          animationOut={"bounceOutDown"}
+          animationOutTiming={700}
           style={[
             styles.modal,
             { backgroundColor: colors.primary, borderColor: colors.border },
