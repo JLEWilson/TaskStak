@@ -14,6 +14,7 @@ import { setCurrentTask, setCurrentTasks } from "../reducers/toDoListSlice"
 import NoTasksMessage from "../components/NoTasksMessage"
 import { RootState } from "../../store"
 import { current } from "@reduxjs/toolkit"
+import { fetchAllTasks } from "../thunks/fetchData"
 
 const styles = StyleSheet.create({
   container: {
