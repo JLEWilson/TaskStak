@@ -5,6 +5,7 @@ import {
   View,
   Switch,
   StyleSheet,
+  Keyboard,
 } from "react-native"
 import React from "react"
 import { useAppDispatch } from "../hooks/redux"
@@ -25,7 +26,7 @@ interface TaskForm {
 }
 const styles = StyleSheet.create({
   header: {
-    marginVertical: 10,
+    marginTop: 10,
     fontSize: 20,
   },
   propertyContainer: {
@@ -80,8 +81,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    height: "100%",
   },
   textInput: {
     borderWidth: 3,
@@ -113,6 +112,27 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
     taskToEdit && taskToEdit.timeOfDay ? true : false,
   )
+  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true)
+      },
+    )
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false)
+      },
+    )
+
+    return () => {
+      keyboardDidHideListener.remove()
+      keyboardDidShowListener.remove()
+    }
+  }, [])
 
   const handleFormReset = () => {
     setModalVisible(false)
@@ -185,8 +205,8 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           <Icon name="delete" color="#900" size={30} />
         </Pressable>
       )}
-      <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
       <View style={styles.innerContainer}>
+        <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
         <View style={{ marginTop: 15 }}>
           <Text style={[styles.label, { color: colors.border }]}>
             Description
@@ -243,7 +263,7 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           />
         )}
       </View>
-      {button}
+      {!isKeyboardVisible && button}
     </View>
   )
 }
