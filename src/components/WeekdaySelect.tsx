@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   item: {},
   wrapper: {
     marginTop: -15,
+    marginBottom: -15,
     marginHorizontal: -40,
   },
 })
