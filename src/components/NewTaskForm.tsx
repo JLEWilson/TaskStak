@@ -6,6 +6,7 @@ import {
   Switch,
   StyleSheet,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native"
 import React from "react"
 import { useAppDispatch } from "../hooks/redux"
@@ -19,6 +20,7 @@ import { v4 as uuidv4 } from "uuid"
 import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
 import { fetchAllTasks } from "../thunks/fetchData"
+import { useKeyboardVisible } from "../hooks/useKeyboardVisible"
 
 interface TaskForm {
   setModalVisible: (bool: boolean) => void
@@ -112,29 +114,10 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const [isTimeRangeVisible, setTimeRangeVisible] = React.useState(
     taskToEdit && taskToEdit.timeOfDay ? true : false,
   )
-  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false)
-
-  React.useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true)
-      },
-    )
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false)
-      },
-    )
-
-    return () => {
-      keyboardDidHideListener.remove()
-      keyboardDidShowListener.remove()
-    }
-  }, [])
+  const isKeyboardVisible = useKeyboardVisible()
 
   const handleFormReset = () => {
+    if (isKeyboardVisible) Keyboard.dismiss()
     setModalVisible(false)
     setIsRepeating(false)
     setTimeRangeVisible(false)
@@ -196,75 +179,83 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   )
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.notification }]}>
-      <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
-        <Icon name="close" color="#900" size={30} />
-      </Pressable>
-      {taskToEdit && (
-        <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
-          <Icon name="delete" color="#900" size={30} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={[styles.container, { backgroundColor: colors.notification }]}>
+        <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
+          <Icon name="close" color="#900" size={30} />
         </Pressable>
-      )}
-      <View style={styles.innerContainer}>
-        <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
-        <View style={{ marginTop: 15 }}>
-          <Text style={[styles.label, { color: colors.border }]}>
-            Description
+        {taskToEdit && (
+          <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
+            <Icon name="delete" color="#900" size={30} />
+          </Pressable>
+        )}
+        <View style={styles.innerContainer}>
+          <Text style={[styles.header, { color: colors.text }]}>
+            Task Details
           </Text>
-          <TextInput
-            style={[styles.textInput, { backgroundColor: colors.primary }]}
-            placeholder={description}
-            maxLength={20}
-            onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
-          />
-        </View>
-        <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.border }]}>Priority</Text>
-          <Switch
-            thumbColor={colors.primary}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            value={priority}
-            onValueChange={(value) => setPriority(value)}
-          />
-        </View>
+          <View style={{ marginTop: 15 }}>
+            <Text style={[styles.label, { color: colors.border }]}>
+              Description
+            </Text>
+            <TextInput
+              style={[styles.textInput, { backgroundColor: colors.primary }]}
+              defaultValue={description}
+              maxLength={20}
+              onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
+            />
+          </View>
+          <View style={styles.propertyContainer}>
+            <Text style={[styles.label, { color: colors.border }]}>
+              Priority
+            </Text>
+            <Switch
+              thumbColor={colors.primary}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              value={priority}
+              onValueChange={(value) => setPriority(value)}
+            />
+          </View>
 
-        <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.border }]}>Repeating</Text>
-          <Switch
-            thumbColor={colors.primary}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            value={isRepeating}
-            onValueChange={(value) => setIsRepeating(value)}
-          />
-        </View>
-        <View style={{ marginTop: 0 }}>
-          {isRepeating && (
-            <WeekdaySelect
-              setWeekdayFormData={setWeekdays}
-              taskToEdit={taskToEdit}
+          <View style={styles.propertyContainer}>
+            <Text style={[styles.label, { color: colors.border }]}>
+              Repeating
+            </Text>
+            <Switch
+              thumbColor={colors.primary}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              value={isRepeating}
+              onValueChange={(value) => setIsRepeating(value)}
+            />
+          </View>
+          <View style={{ marginTop: 0 }}>
+            {isRepeating && (
+              <WeekdaySelect
+                setWeekdayFormData={setWeekdays}
+                taskToEdit={taskToEdit}
+              />
+            )}
+          </View>
+          <View style={styles.propertyContainer}>
+            <Text style={[styles.label, { color: colors.text }]}>TimeRange</Text>
+            <Switch
+              thumbColor={colors.primary}
+              trackColor={{ false: colors.border, true: colors.primary }}
+              value={isTimeRangeVisible}
+              onValueChange={(value) => setTimeRangeVisible(value)}
+            />
+          </View>
+          {isTimeRangeVisible && (
+            <TimeRange
+              setStartTimeFormInput={setStartTime}
+              setEndTimeFormInput={setEndTime}
+              defaultStartTime={startTime}
+              defaultEndTime={endTime}
             />
           )}
         </View>
-        <View style={styles.propertyContainer}>
-          <Text style={[styles.label, { color: colors.text }]}>TimeRange</Text>
-          <Switch
-            thumbColor={colors.primary}
-            trackColor={{ false: colors.border, true: colors.primary }}
-            value={isTimeRangeVisible}
-            onValueChange={(value) => setTimeRangeVisible(value)}
-          />
-        </View>
-        {isTimeRangeVisible && (
-          <TimeRange
-            setStartTimeFormInput={setStartTime}
-            setEndTimeFormInput={setEndTime}
-            defaultStartTime={startTime}
-            defaultEndTime={endTime}
-          />
-        )}
+        {!isKeyboardVisible && button}
       </View>
-      {!isKeyboardVisible && button}
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 export default TaskForm
