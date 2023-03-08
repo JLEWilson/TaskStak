@@ -50,22 +50,17 @@ const HomeScreen = () => {
     dispatch(setCurrentTasks(tasksForNow))
   }, [allTasks])
   React.useEffect(() => {
-    if (currentToDoList.length > 0) {
-      dispatch(setCurrentTask(currentToDoList[0]))
-    }
+    dispatch(setCurrentTask(currentToDoList[0]))
   }, [currentToDoList])
-  const handleTaskCompleted = (task: Task) => {
-    setTaskCompleted(task)
-    const copy = [...currentToDoList]
-    const tempTask = copy.shift()
-    dispatch(setCurrentTasks(copy))
-    dispatch(setCurrentTask(tempTask))
+  const handleTaskCompleted = async (task: Task) => {
+    await setTaskCompleted(task)
+    const [, ...rest] = currentToDoList
+    dispatch(setCurrentTasks(rest))
   }
   const handleTaskPassed = (task: Task) => {
     const newTaskList = passOnTask(task, [...currentToDoList])
-    setCurrentTasks(newTaskList)
     const tempTask = newTaskList.shift()
-    dispatch(setCurrentTask(tempTask))
+    dispatch(setCurrentTasks(newTaskList))
   }
   if (isLoadingAllTasks) {
     return (
