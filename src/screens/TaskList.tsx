@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native"
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  Keyboard,
+} from "react-native"
 import NewTaskForm from "../components/NewTaskForm"
 import Modal from "react-native-modal"
 import React from "react"
@@ -8,7 +15,7 @@ import { useAppSelector, useAppDispatch } from "../hooks/redux"
 import { ToDoListState } from "../reducers/toDoListSlice"
 import type { Task } from "../models/Task.Server"
 import TaskItem from "../components/TaskItem"
-
+import { useKeyboardVisible } from "../hooks/useKeyboardVisible"
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -51,7 +58,7 @@ const styles = StyleSheet.create({
 const TaskList = () => {
   const { colors } = useTheme()
   const [isModalVisible, setModalVisible] = React.useState(false)
-
+  const isKeyboardVisible = useKeyboardVisible()
   const isLoadingAllTasks = useAppSelector(
     (state: { todolist: ToDoListState }) => state.todolist.isLoadingAllTasks,
   )
@@ -64,6 +71,10 @@ const TaskList = () => {
     setModalVisible(true)
     setTaskToEdit(undefined)
   }
+  const handleModalOutsidePress = () => {
+    if (isKeyboardVisible) Keyboard.dismiss()
+    setModalVisible(false)
+  }
   if (isLoadingAllTasks) {
     return (
       <View>
@@ -75,6 +86,7 @@ const TaskList = () => {
       <View style={styles.container}>
         <Text style={[styles.header, { color: colors.text }]}>TaskList</Text>
         <Modal
+          onBackdropPress={() => handleModalOutsidePress()}
           backdropOpacity={0.3}
           animationIn={"bounceInUp"}
           animationInTiming={700}
