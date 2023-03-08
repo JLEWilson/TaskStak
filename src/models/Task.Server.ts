@@ -107,7 +107,7 @@ export const createTask = async (task: Task): Promise<void> => {
   try {
     return await A.setItem(taskIdModifier + task.id, JSON.stringify(task))
   } catch (err) {
-    throw err
+    console.log(err)
   }
 }
 
@@ -119,7 +119,7 @@ export const getTask = async (id: Task["id"]): Promise<Task | undefined> => {
     }
     return undefined
   } catch (err) {
-    throw err
+    console.log(err)
   }
 }
 
@@ -136,7 +136,7 @@ export const getAllTasks = async () => {
     }
     return resultsWithValues
   } catch (err) {
-    throw err
+    console.log(err)
   }
 }
 
@@ -144,7 +144,7 @@ export const deleteTask = async (id: Task["id"]) => {
   try {
     return await A.removeItem(taskIdModifier + id)
   } catch (err) {
-    throw err
+    console.log(err)
   }
 }
 
@@ -152,7 +152,22 @@ export const updateTask = async (task: Task) => {
   try {
     return await A.mergeItem(taskIdModifier + task["id"], JSON.stringify(task))
   } catch (err) {
-    throw err
+    console.log(err)
+  }
+}
+export const setTaskCompleted = async (task: Task) => {
+  const updatedTask: Task = { ...task, completed: true }
+  try {
+    if (updatedTask.repeating) {
+      return await A.setItem(
+        taskIdModifier + task.id,
+        JSON.stringify(updatedTask),
+      )
+    } else {
+    }
+    return await A.removeItem(updatedTask.id)
+  } catch (err) {
+    console.log(err)
   }
 }
 /*
@@ -208,14 +223,4 @@ export const passOnTask = (taskToPass: Task, tasks: Task[]) => {
   const newList = randomizeTasks(copy)
   newList.push(taskToPass)
   return newList
-}
-
-export const setTaskCompleted = (task: Task) => {
-  task.completed = true
-  if (task.repeating === false) {
-    return A.removeItem(taskIdModifier + task.id, (e) => {
-      console.error(e)
-    })
-  }
-  return A.setItem(taskIdModifier + task.id, JSON.stringify(task))
 }
