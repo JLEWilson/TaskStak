@@ -1,25 +1,19 @@
 import { View, Text, StyleSheet, Pressable } from "react-native"
 import React from "react"
 import { useTheme } from "@react-navigation/native"
-import {
-  getTask,
-  getTasksForNow,
-  getTodaysTasks,
-  Task,
-} from "../models/Task.Server"
+import { getTasksForNow, getTodaysTasks, Task } from "../models/Task.Server"
 import CurrentTask from "../components/CurrentTask"
 import { passOnTask, setTaskCompleted } from "../models/Task.Server"
 import { useAppSelector, useAppDispatch } from "../hooks/redux"
 import { setCurrentTask, setCurrentTasks } from "../reducers/toDoListSlice"
 import NoTasksMessage from "../components/NoTasksMessage"
 import { RootState } from "../../store"
-import { current } from "@reduxjs/toolkit"
-import { fetchAllTasks } from "../thunks/fetchData"
 
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonContainer: {
     display: "flex",
@@ -59,7 +53,6 @@ const HomeScreen = () => {
   }
   const handleTaskPassed = (task: Task) => {
     const newTaskList = passOnTask(task, [...currentToDoList])
-    const tempTask = newTaskList.shift()
     dispatch(setCurrentTasks(newTaskList))
   }
   if (isLoadingAllTasks) {
