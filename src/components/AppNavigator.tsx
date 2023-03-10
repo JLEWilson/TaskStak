@@ -7,7 +7,9 @@ import { StyleSheet } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { fetchAllTasks } from "../thunks/fetchData"
 import { useAppDispatch } from "../hooks/redux"
-import { StatusBar, StatusBarProps } from "react-native"
+import { StatusBar } from "react-native"
+import * as NavigationBar from "expo-navigation-bar"
+
 const MyTheme = {
   dark: true,
   colors: {
@@ -25,11 +27,15 @@ const Tab = createBottomTabNavigator()
 const AppNavigator = () => {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
+    //This is to prevent some default behaviors that change the color
+    NavigationBar.setBackgroundColorAsync("black")
+    NavigationBar.setButtonStyleAsync("light")
+
     dispatch(fetchAllTasks())
   }, [])
   return (
     <NavigationContainer theme={MyTheme}>
-      <StatusBar backgroundColor={MyTheme.colors.background} />
+      <StatusBar backgroundColor={"black"} />
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
