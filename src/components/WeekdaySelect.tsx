@@ -10,10 +10,13 @@ type WeekdaySelectProps = {
 }
 
 const styles = StyleSheet.create({
-  item: {},
+  item: {
+    marginHorizontal: 3,
+    elevation: 6,
+  },
   wrapper: {
-    marginTop: -15,
-    marginBottom: -15,
+    marginTop: -25,
+    marginBottom: -45,
     marginHorizontal: -40,
   },
 })
@@ -33,9 +36,9 @@ const WeekdaySelect: FC<WeekdaySelectProps> = ({
     <DayPicker
       weekdays={weekdays}
       setWeekdays={setWeekdays}
-      activeColor={colors.primary}
+      activeColor={colors.background}
       textColor={colors.border}
-      inactiveColor={colors.background}
+      inactiveColor={colors.primary}
       itemStyles={styles.item}
       wrapperStyles={styles.wrapper}
     />
