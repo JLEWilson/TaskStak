@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native"
 import React from "react"
 import { useAppDispatch } from "../hooks/redux"
@@ -21,42 +22,45 @@ import WeekdaySelect from "./WeekdaySelect"
 import type { TimeOfDay } from "../models/Task.Server"
 import { fetchAllTasks } from "../thunks/fetchData"
 import { useKeyboardVisible } from "../hooks/useKeyboardVisible"
-
+import ReusableSVG from "./ReusableSVG"
 interface TaskForm {
   setModalVisible: (bool: boolean) => void
   taskToEdit?: Task
 }
 const styles = StyleSheet.create({
+  container: {
+    height: "100%",
+    alignItems: "center",
+  },
   header: {
-    marginTop: 10,
-    fontSize: 20,
+    marginTop: 15,
+    fontSize: 22,
   },
   propertyContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginVertical: "auto",
-    marginTop: 15,
+    marginTop: 25,
   },
   innerContainer: {
-    marginVertical: "auto",
     display: "flex",
-    height: "100%",
-    width: "70%",
+    justifyContent: "space-between",
+    marginTop: 15,
   },
   label: {
     fontSize: 18,
   },
   button: {
-    marginTop: "auto",
-    marginBottom: 5,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
+    padding: 8,
+    height: 60,
+    width: 120,
+    marginTop: "auto",
+    marginBottom: 10,
   },
   buttonText: {
+    position: "absolute",
     fontSize: 18,
   },
   cancel: {
@@ -79,10 +83,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
-  },
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   textInput: {
     borderWidth: 3,
@@ -158,26 +158,8 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   }
 
   //There is the option of creating a custom component for this button, but I was unable how to figure out the onPress function as a paremeter
-  const button = taskToEdit ? (
-    <Pressable
-      style={[styles.button, { backgroundColor: colors.primary }]}
-      onPress={() => handleFormSubmit(updateTask, taskToEdit)}
-    >
-      <Text style={[styles.buttonText, { color: colors.border }]}>
-        Update Task
-      </Text>
-    </Pressable>
-  ) : (
-    <Pressable
-      style={[styles.button, { backgroundColor: colors.primary }]}
-      onPress={() => handleFormSubmit(createTask)}
-    >
-      <Text style={[styles.buttonText, { color: colors.border }]}>
-        Add New Task
-      </Text>
-    </Pressable>
-  )
-
+  const database = taskToEdit ? updateTask : createTask
+  const buttonText = taskToEdit ? "Update Task" : "Create Task"
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={[styles.container, { backgroundColor: colors.notification }]}>
@@ -189,10 +171,8 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             <Icon name="delete" color="#900" size={30} />
           </Pressable>
         )}
+        <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
         <View style={styles.innerContainer}>
-          <Text style={[styles.header, { color: colors.text }]}>
-            Task Details
-          </Text>
           <View style={{ marginTop: 15 }}>
             <Text style={[styles.label, { color: colors.border }]}>
               Description
@@ -253,7 +233,30 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             />
           )}
         </View>
-        {!isKeyboardVisible && button}
+        {!isKeyboardVisible && (
+          <TouchableOpacity
+            onPress={() => handleFormSubmit(database, taskToEdit)}
+            style={styles.button}
+          >
+            <ReusableSVG
+              height={140}
+              width={100}
+              fill={colors.card}
+              opacity={1}
+              viewBox={"0 0 138.277 48.133"}
+              offset={"-33.602 -61.691"}
+              d={
+                "M36.903 61.742c3.9-.238 127.925.381 131.645 1.42 3.72 1.037 4.342 43.77 1.775 45.773-2.568 2.004-127.703-.067-133.065.355-5.362.422-4.255-47.31-.355-47.548z"
+              }
+              strokeWidth={1}
+              containerStyles={styles.button}
+            >
+              <Text style={[styles.buttonText, { color: colors.border }]}>
+                {buttonText}
+              </Text>
+            </ReusableSVG>
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableWithoutFeedback>
   )
