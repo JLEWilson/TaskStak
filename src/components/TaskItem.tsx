@@ -1,17 +1,21 @@
 import React from "react"
-import { View, StyleSheet, Text, Pressable } from "react-native"
+import { View, StyleSheet, Pressable } from "react-native"
 import type { Task } from "../models/Task.Server"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useTheme } from "@react-navigation/native"
+import StyledText from "./StyledText"
+import EditSVG from "../SVGS/EditSVG"
 
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     marginTop: 30,
-    padding: 15,
+    padding: 10,
     borderRadius: 30,
+    borderWidth: 0.75,
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
   },
   text: {
     marginLeft: 20,
@@ -19,7 +23,7 @@ const styles = StyleSheet.create({
   },
   edit: {
     marginLeft: "auto",
-    marginRight: 5,
+    padding: 10,
     zIndex: 0.5,
   },
 })
@@ -39,17 +43,27 @@ const TaskItem: React.FC<TaskItemProps> = ({
   }
   const { colors } = useTheme()
   return (
-    <View style={[styles.container, { backgroundColor: colors.card }]}>
-      <Text style={[styles.text, { color: colors.text }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: colors.card, borderColor: colors.border },
+      ]}
+    >
+      <StyledText style={[styles.text, { color: colors.text }]}>
         {task.description}
-      </Text>
+      </StyledText>
       <Pressable
         style={styles.edit}
         onPress={() => {
           handleEditTask()
         }}
       >
-        <Icon name="edit" size={30} />
+        <EditSVG
+          width={30}
+          height={20}
+          viewBox="0 0 154 110"
+          fill={colors.border}
+        />
       </Pressable>
     </View>
   )
