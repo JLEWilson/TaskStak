@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   Keyboard,
+  TouchableOpacity,
 } from "react-native"
 import NewTaskForm from "../components/NewTaskForm"
 import Modal from "react-native-modal"
@@ -15,7 +16,9 @@ import { useAppSelector, useAppDispatch } from "../hooks/redux"
 import { ToDoListState } from "../reducers/toDoListSlice"
 import type { Task } from "../models/Task.Server"
 import TaskItem from "../components/TaskItem"
+import StyledText from "../components/StyledText"
 import { useKeyboardVisible } from "../hooks/useKeyboardVisible"
+import PlusSVG from "../SVGS/PlusSVG"
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -24,17 +27,14 @@ const styles = StyleSheet.create({
   header: {
     textAlign: "center",
     marginTop: 25,
+    fontSize: 25,
   },
   add: {
-    position: "absolute",
-    bottom: 8,
-    left: 150,
-    right: 150,
-    backgroundColor: "blue",
+    marginLeft: "auto",
+    marginRight: "auto",
     borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 5,
+
+    padding: 10,
   },
   modal: {
     marginTop: 100,
@@ -78,13 +78,15 @@ const TaskList = () => {
   if (isLoadingAllTasks) {
     return (
       <View>
-        <Text>Loading...</Text>
+        <StyledText>Loading...</StyledText>
       </View>
     )
   } else {
     return (
       <View style={styles.container}>
-        <Text style={[styles.header, { color: colors.text }]}>TaskList</Text>
+        <StyledText style={[styles.header, { color: colors.text }]}>
+          TaskList
+        </StyledText>
         <Modal
           onBackdropPress={() => handleModalOutsidePress()}
           backdropOpacity={0.3}
@@ -114,9 +116,16 @@ const TaskList = () => {
               />
             ))}
         </ScrollView>
-        <Pressable style={styles.add} onPress={() => handleNewTaskForm()}>
-          <Icon name="add" size={30} color="white" />
-        </Pressable>
+        <TouchableOpacity style={styles.add} onPress={() => handleNewTaskForm()}>
+          <PlusSVG
+            width={50}
+            height={50}
+            stroke={colors.border}
+            strokeWidth={0}
+            viewBox="-2 -2 40 40"
+            fill={colors.card}
+          />
+        </TouchableOpacity>
       </View>
     )
   }
