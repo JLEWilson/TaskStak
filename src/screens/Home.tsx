@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from "../hooks/redux"
 import { setCurrentTask, setCurrentTasks } from "../reducers/toDoListSlice"
 import NoTasksMessage from "../components/NoTasksMessage"
 import { RootState } from "../../store"
+import StyledText from "../components/StyledText"
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
+    fontSize: 25,
     marginTop: 25,
   },
 })
@@ -72,7 +74,9 @@ const HomeScreen = () => {
   if (currentTask) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.text, { color: colors.text }]}>Home</Text>
+        <StyledText style={[styles.text, { color: colors.text }]}>
+          Home
+        </StyledText>
         <CurrentTask
           task={currentTask}
           onPass={handleTaskPassed}
