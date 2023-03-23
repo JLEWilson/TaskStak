@@ -2,14 +2,14 @@
   "expo": {
     "name": "TaskStak",
     "slug": "TaskStak",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#abced9"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,11 +21,11 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#abced9"
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.jlewilson.TaskStak",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/favicon.png"
