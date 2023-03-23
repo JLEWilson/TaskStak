@@ -1,6 +1,5 @@
 import {
   Pressable,
-  Text,
   TextInput,
   View,
   Switch,
@@ -23,6 +22,10 @@ import type { TimeOfDay } from "../models/Task.Server"
 import { fetchAllTasks } from "../thunks/fetchData"
 import { useKeyboardVisible } from "../hooks/useKeyboardVisible"
 import ReusableSVG from "./ReusableSVG"
+import StyledText from "./StyledText"
+import TrashSVG from "../SVGS/TrashSVG"
+import CloseSVG from "../SVGS/CloseSVG"
+import Button3SVG from "../SVGS/Button3SVG"
 interface TaskForm {
   setModalVisible: (bool: boolean) => void
   taskToEdit?: Task
@@ -164,19 +167,35 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={[styles.container, { backgroundColor: colors.notification }]}>
         <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
-          <Icon name="close" color="#900" size={30} />
+          <CloseSVG
+            width={50}
+            height={50}
+            stroke={colors.border}
+            strokeWidth={1}
+            viewBox="-2 -2 40 40"
+            fill={colors.card}
+          />
         </Pressable>
         {taskToEdit && (
           <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
-            <Icon name="delete" color="#900" size={30} />
+            <TrashSVG
+              fill={colors.card}
+              stroke={colors.border}
+              width={50}
+              height={50}
+              strokeWidth={2}
+              viewBox="-10 0 75 85"
+            />
           </Pressable>
         )}
-        <Text style={[styles.header, { color: colors.text }]}>Task Details</Text>
+        <StyledText style={[styles.header, { color: colors.text }]}>
+          Task Details
+        </StyledText>
         <View style={styles.innerContainer}>
           <View style={{ marginTop: 15 }}>
-            <Text style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.border }]}>
               Description
-            </Text>
+            </StyledText>
             <TextInput
               style={[styles.textInput, { backgroundColor: colors.primary }]}
               defaultValue={description}
@@ -185,9 +204,9 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             />
           </View>
           <View style={styles.propertyContainer}>
-            <Text style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.border }]}>
               Priority
-            </Text>
+            </StyledText>
             <Switch
               thumbColor={colors.primary}
               trackColor={{ false: colors.border, true: colors.primary }}
@@ -197,9 +216,9 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           </View>
 
           <View style={styles.propertyContainer}>
-            <Text style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.border }]}>
               Repeating
-            </Text>
+            </StyledText>
             <Switch
               thumbColor={colors.primary}
               trackColor={{ false: colors.border, true: colors.primary }}
@@ -216,7 +235,9 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             )}
           </View>
           <View style={styles.propertyContainer}>
-            <Text style={[styles.label, { color: colors.text }]}>TimeRange</Text>
+            <StyledText style={[styles.label, { color: colors.text }]}>
+              TimeRange
+            </StyledText>
             <Switch
               thumbColor={colors.primary}
               trackColor={{ false: colors.border, true: colors.primary }}
@@ -238,23 +259,16 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             onPress={() => handleFormSubmit(database, taskToEdit)}
             style={styles.button}
           >
-            <ReusableSVG
-              height={140}
-              width={100}
+            <Button3SVG
               fill={colors.card}
-              opacity={1}
-              viewBox={"0 0 138.277 48.133"}
-              offset={"-33.602 -61.691"}
-              d={
-                "M36.903 61.742c3.9-.238 127.925.381 131.645 1.42 3.72 1.037 4.342 43.77 1.775 45.773-2.568 2.004-127.703-.067-133.065.355-5.362.422-4.255-47.31-.355-47.548z"
-              }
-              strokeWidth={1}
-              containerStyles={styles.button}
-            >
-              <Text style={[styles.buttonText, { color: colors.border }]}>
-                {buttonText}
-              </Text>
-            </ReusableSVG>
+              width={250}
+              height={60}
+              viewBox={"5.5 00 25 50"}
+              stroke={colors.border}
+            />
+            <StyledText style={[styles.buttonText, { color: colors.border }]}>
+              {buttonText}
+            </StyledText>
           </TouchableOpacity>
         )}
       </View>
