@@ -3,7 +3,7 @@ import React, { FC } from "react"
 import { StyleSheet } from "react-native"
 import { DayPicker } from "react-native-picker-weekday"
 import type { Task } from "../models/Task.Server"
-
+import { useFonts } from "expo-font"
 type WeekdaySelectProps = {
   setWeekdayFormData: (days: number[]) => void
   taskToEdit?: Task
@@ -32,6 +32,14 @@ const WeekdaySelect: FC<WeekdaySelectProps> = ({
   React.useEffect(() => {
     setWeekdayFormData(weekdays)
   }, [weekdays])
+  const [fontsLoaded] = useFonts({
+    "Averia-Libre": require("../../assets/fonts/AveriaLibre-Regular.ttf"),
+    "Averia-Libre-Bold": require("../../assets/fonts/AveriaLibre-Bold.ttf"),
+  })
+
+  if (!fontsLoaded) {
+    return null
+  }
   return (
     <DayPicker
       weekdays={weekdays}
@@ -39,6 +47,7 @@ const WeekdaySelect: FC<WeekdaySelectProps> = ({
       activeColor={colors.background}
       textColor={colors.border}
       inactiveColor={colors.primary}
+      dayTextStyle={{ fontFamily: "Averia-Libre-Bold" }}
       itemStyles={styles.item}
       wrapperStyles={styles.wrapper}
     />
