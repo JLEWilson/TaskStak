@@ -26,6 +26,7 @@ import StyledText from "./StyledText"
 import TrashSVG from "../SVGS/TrashSVG"
 import CloseSVG from "../SVGS/CloseSVG"
 import Button3SVG from "../SVGS/Button3SVG"
+import { useFonts } from "expo-font"
 interface TaskForm {
   setModalVisible: (bool: boolean) => void
   taskToEdit?: Task
@@ -97,6 +98,9 @@ export const RADIO_OPTIONS = ["Any", "Morning", "Afternoon", "Evening", "Night"]
 const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const dispatch = useAppDispatch()
   const { colors } = useTheme()
+  const [fontsLoaded] = useFonts({
+    "Averia-Libre": require("../../assets/fonts/AveriaLibre-Regular.ttf"),
+  })
   const [description, setDescription] = React.useState(
     taskToEdit ? taskToEdit?.description : "",
   )
@@ -165,21 +169,21 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const buttonText = taskToEdit ? "Update Task" : "Create Task"
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={[styles.container, { backgroundColor: colors.notification }]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
           <CloseSVG
             width={50}
             height={50}
             stroke={colors.border}
-            strokeWidth={1}
+            strokeWidth={0}
             viewBox="-2 -2 40 40"
-            fill={colors.card}
+            fill={colors.primary}
           />
         </Pressable>
         {taskToEdit && (
           <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
             <TrashSVG
-              fill={colors.card}
+              fill={colors.primary}
               stroke={colors.border}
               width={50}
               height={50}
@@ -193,35 +197,43 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
         </StyledText>
         <View style={styles.innerContainer}>
           <View style={{ marginTop: 15 }}>
-            <StyledText style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.text }]}>
               Description
             </StyledText>
             <TextInput
-              style={[styles.textInput, { backgroundColor: colors.primary }]}
+              style={[
+                styles.textInput,
+                {
+                  backgroundColor: colors.notification,
+                  borderColor: colors.border,
+                  color: colors.text,
+                  fontFamily: fontsLoaded ? "Averia-Libre" : undefined,
+                },
+              ]}
               defaultValue={description}
               maxLength={20}
               onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
             />
           </View>
           <View style={styles.propertyContainer}>
-            <StyledText style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.text }]}>
               Priority
             </StyledText>
             <Switch
               thumbColor={colors.primary}
-              trackColor={{ false: colors.border, true: colors.primary }}
+              trackColor={{ false: colors.notification, true: colors.primary }}
               value={priority}
               onValueChange={(value) => setPriority(value)}
             />
           </View>
 
           <View style={styles.propertyContainer}>
-            <StyledText style={[styles.label, { color: colors.border }]}>
+            <StyledText style={[styles.label, { color: colors.text }]}>
               Repeating
             </StyledText>
             <Switch
               thumbColor={colors.primary}
-              trackColor={{ false: colors.border, true: colors.primary }}
+              trackColor={{ false: colors.notification, true: colors.primary }}
               value={isRepeating}
               onValueChange={(value) => setIsRepeating(value)}
             />
@@ -240,7 +252,7 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             </StyledText>
             <Switch
               thumbColor={colors.primary}
-              trackColor={{ false: colors.border, true: colors.primary }}
+              trackColor={{ false: colors.notification, true: colors.primary }}
               value={isTimeRangeVisible}
               onValueChange={(value) => setTimeRangeVisible(value)}
             />
@@ -260,13 +272,16 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
             style={styles.button}
           >
             <Button3SVG
-              fill={colors.card}
+              fill={colors.primary}
               width={250}
               height={60}
-              viewBox={"5.5 00 25 50"}
+              viewBox={"4.6 00 25 50"}
               stroke={colors.border}
+              strokeWidth={3}
             />
-            <StyledText style={[styles.buttonText, { color: colors.border }]}>
+            <StyledText
+              style={[styles.buttonText, { color: colors.notification }]}
+            >
               {buttonText}
             </StyledText>
           </TouchableOpacity>
