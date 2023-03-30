@@ -44,9 +44,9 @@ const WeekdaySelect: FC<WeekdaySelectProps> = ({
     <DayPicker
       weekdays={weekdays}
       setWeekdays={setWeekdays}
-      activeColor={colors.background}
-      textColor={colors.border}
-      inactiveColor={colors.primary}
+      activeColor={colors.primary}
+      textColor={colors.text}
+      inactiveColor={colors.notification}
       dayTextStyle={{ fontFamily: "Averia-Libre-Bold" }}
       itemStyles={styles.item}
       wrapperStyles={styles.wrapper}
