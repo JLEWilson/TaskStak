@@ -96,7 +96,7 @@ const TaskList = () => {
           animationOutTiming={700}
           style={[
             styles.modal,
-            { backgroundColor: colors.primary, borderColor: colors.border },
+            { backgroundColor: colors.border, borderColor: colors.border },
           ]}
           isVisible={isModalVisible}
         >
@@ -123,7 +123,7 @@ const TaskList = () => {
             stroke={colors.border}
             strokeWidth={0}
             viewBox="-2 -2 40 40"
-            fill={colors.card}
+            fill={colors.primary}
           />
         </TouchableOpacity>
       </View>
