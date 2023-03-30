@@ -1,7 +1,6 @@
 import HomeScreen from "../screens/Home"
 import React from "react"
 import TaskList from "../screens/TaskList"
-import MaterialIcon from "react-native-vector-icons/MaterialIcons"
 import { NavigationContainer } from "@react-navigation/native"
 import { StyleSheet } from "react-native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -10,19 +9,17 @@ import { useAppDispatch } from "../hooks/redux"
 import { StatusBar } from "react-native"
 import * as NavigationBar from "expo-navigation-bar"
 import HomeSVG from "../SVGS/HomeSVG"
-import { Colors } from "react-native/Libraries/NewAppScreen"
-import type { TransformObject } from "react-native-svg"
 import ListSVG from "../SVGS/ListSVG"
 
 const MyTheme = {
   dark: true,
   colors: {
-    primary: "#e2fcc7", //Buttons and form Inputs
-    background: "#abced9",
-    card: "#faf5c0", //TaskBackground
-    text: "#170f33",
-    border: "#152109", //Form Text
-    notification: "#fcd4e4", //Modal Background
+    primary: "#5e746f", //Icons, Form Toggles, Form Selected Days, Buttons
+    background: "#c1bdaf",
+    card: "#b4a69f",
+    text: "#4c4b4c",
+    border: "#876349",
+    notification: "#a2b192",
   },
 }
 
@@ -45,7 +42,7 @@ const AppNavigator = () => {
         screenOptions={{
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: MyTheme.colors.primary,
+            backgroundColor: MyTheme.colors.notification,
             height: 60,
           },
         }}
@@ -62,9 +59,7 @@ const AppNavigator = () => {
                   viewBox={"-.5 -10 100 100"}
                   stroke={MyTheme.colors.border}
                   fill={
-                    focused
-                      ? MyTheme.colors.notification
-                      : MyTheme.colors.primary
+                    focused ? MyTheme.colors.primary : MyTheme.colors.primary
                   }
                 />
                 // <MaterialIcon name="home" size={25} style={{ paddingTop: 5 }} />
@@ -88,9 +83,7 @@ const AppNavigator = () => {
                   viewBox={"-2.5 -20 100 100"}
                   stroke={MyTheme.colors.border}
                   fill={
-                    focused
-                      ? MyTheme.colors.notification
-                      : MyTheme.colors.primary
+                    focused ? MyTheme.colors.primary : MyTheme.colors.primary
                   }
                 />
                 //<MaterialIcon name="list" size={25} style={{ paddingTop: 5 }} />
