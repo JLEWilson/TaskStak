@@ -74,9 +74,6 @@ const HomeScreen = () => {
   if (currentTask) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <StyledText style={[styles.text, { color: colors.text }]}>
-          Home
-        </StyledText>
         <CurrentTask
           task={currentTask}
           onPass={handleTaskPassed}
