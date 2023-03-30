@@ -1,16 +1,9 @@
 import React from "react"
 import type { Task } from "../models/Task.Server"
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from "react-native"
+import { View, StyleSheet, TouchableOpacity, Animated } from "react-native"
 import StyledText from "./StyledText"
 import { useTheme } from "@react-navigation/native"
 
-import ReusableSVG from "./ReusableSVG"
 import DivSVG from "../SVGS/DivSVG"
 import Button1SVG from "../SVGS/Button2SVG"
 import Button2SVG from "../SVGS/Button2SVG"
@@ -19,6 +12,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 55,
   },
   taskContainer: {
     alignItems: "center",
@@ -57,15 +51,19 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
   onComplete,
 }) => {
   const { colors } = useTheme()
+
   return (
     <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
       <View style={styles.taskContainer}>
         <DivSVG
           fill={colors.card}
           stroke={colors.border}
+          strokeWidth={5}
           viewBox="-253 -175 1056 706"
         />
-        <StyledText style={[styles.text, styles.primaryText]}>
+        <StyledText
+          style={[styles.text, styles.primaryText, { color: colors.text }]}
+        >
           {task.description}
         </StyledText>
       </View>
@@ -75,12 +73,17 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
             height={100}
             width={150}
             style={styles.button}
-            fill={colors.card}
+            fill={colors.primary}
+            strokeWidth={5}
             stroke={colors.border}
             viewBox="40 -50 175 220"
           />
           <StyledText
-            style={[styles.text, styles.buttonText, { left: 35, top: 50 }]}
+            style={[
+              styles.text,
+              styles.buttonText,
+              { color: colors.notification, left: 35, top: 50 },
+            ]}
           >
             Complete
           </StyledText>
@@ -90,12 +93,17 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
             height={100}
             width={150}
             style={styles.button}
-            fill={colors.card}
+            fill={colors.primary}
+            strokeWidth={5}
             stroke={colors.border}
             viewBox="40 -50 175 220"
           />
           <StyledText
-            style={[styles.text, styles.buttonText, { left: 60, top: 50 }]}
+            style={[
+              styles.text,
+              styles.buttonText,
+              { color: colors.notification, left: 60, top: 50 },
+            ]}
           >
             Pass
           </StyledText>
