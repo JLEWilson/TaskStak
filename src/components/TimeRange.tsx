@@ -7,6 +7,7 @@ import type {
   EvtTypes,
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker"
+import { useFonts } from "expo-font"
 const styles = StyleSheet.create({
   container: {
     display: "flex",
@@ -15,9 +16,7 @@ const styles = StyleSheet.create({
   button: {
     paddingHorizontal: 10,
     borderRadius: 10,
-    borderWidth: 1,
-    borderBottomWidth: 2,
-    borderLeftWidth: 2,
+    borderWidth: 2,
   },
   text: {
     fontSize: 18,
@@ -36,6 +35,9 @@ const TimeRange: React.FC<TimeRangeProps> = ({
   defaultStartTime,
   defaultEndTime,
 }) => {
+  const [fontsLoaded] = useFonts({
+    "Averia-Libre": require("../../assets/fonts/AveriaLibre-Regular.ttf"),
+  })
   const [startTime, setStartTime] = React.useState<Date>(
     defaultStartTime
       ? new Date(defaultStartTime)
@@ -86,16 +88,36 @@ const TimeRange: React.FC<TimeRangeProps> = ({
     <View style={styles.container}>
       <Pressable
         onPress={() => setShowStart(true)}
-        style={[styles.button, { backgroundColor: colors.primary }]}
+        style={[
+          styles.button,
+          { backgroundColor: colors.notification, borderColor: colors.border },
+        ]}
       >
-        <Text style={[styles.text, { color: colors.text }]}>{startDisplay}</Text>
+        <Text
+          style={[
+            styles.text,
+            { color: colors.text, fontFamily: "Averia-Libre" },
+          ]}
+        >
+          {startDisplay}
+        </Text>
       </Pressable>
       <Text style={[styles.text, { color: colors.text }]}> to </Text>
       <Pressable
         onPress={() => setShowEnd(true)}
-        style={[styles.button, { backgroundColor: colors.primary }]}
+        style={[
+          styles.button,
+          { backgroundColor: colors.notification, borderColor: colors.border },
+        ]}
       >
-        <Text style={[styles.text, { color: colors.text }]}>{endDisplay}</Text>
+        <Text
+          style={[
+            styles.text,
+            { color: colors.text, fontFamily: "Averia-Libre" },
+          ]}
+        >
+          {endDisplay}
+        </Text>
       </Pressable>
       {showStart && (
         <DateTimePicker
