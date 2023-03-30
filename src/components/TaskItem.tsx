@@ -9,10 +9,10 @@ import EditSVG from "../SVGS/EditSVG"
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginTop: 30,
+    marginTop: 20,
     padding: 10,
     borderRadius: 30,
-    borderWidth: 0.75,
+    borderWidth: 3,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -62,7 +62,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           width={30}
           height={20}
           viewBox="0 0 154 110"
-          fill={colors.border}
+          fill={colors.primary}
         />
       </Pressable>
     </View>
