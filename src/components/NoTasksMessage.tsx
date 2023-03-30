@@ -1,24 +1,19 @@
 import React from "react"
-import { View, Text, StyleSheet } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { useTheme } from "@react-navigation/native"
+import StyledText from "./StyledText"
+import DivSVG from "../SVGS/DivSVG"
 
 const styles = StyleSheet.create({
   mainContainer: {
-    height: "90%",
-    display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 55,
   },
-  taskContainer: {
-    width: 200,
-    height: 100,
-    borderRadius: 50,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   text: {
-    fontSize: 15,
+    position: "absolute",
+    fontSize: 22,
   },
 })
 
@@ -26,11 +21,15 @@ const NoTasksMessage = () => {
   const { colors } = useTheme()
   return (
     <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
-      <View style={[styles.taskContainer, { backgroundColor: colors.card }]}>
-        <Text style={[styles.text, { color: colors.text }]}>
-          You have no more tasks!
-        </Text>
-      </View>
+      <DivSVG
+        fill={colors.card}
+        stroke={colors.border}
+        strokeWidth={5}
+        viewBox="-253 -175 1056 706"
+      />
+      <StyledText style={[styles.text, { color: colors.text }]}>
+        You have nothing to do!
+      </StyledText>
     </View>
   )
 }
