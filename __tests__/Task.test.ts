@@ -8,9 +8,9 @@ beforeEach(async () => {
 })
 
 describe("getTask", () => {
-  test("if no result exists at key, return null", async () => {
+  test("if no result exists at key, return undefined", async () => {
     const result = await getTask("fakekey")
-    expect(result).toEqual(null)
+    expect(result).toEqual(undefined)
   })
 
   test("returns a task by id", async () => {
@@ -63,6 +63,6 @@ describe("deleteTask", () => {
     deleteTask(myTask.id)
 
     const deletedResult = await getTask(myTask.id)
-    expect(deletedResult).toEqual(null)
+    expect(deletedResult).toEqual(undefined)
   })
 })
