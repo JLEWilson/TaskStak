@@ -23,7 +23,9 @@ const styles = StyleSheet.create({
   },
   edit: {
     marginLeft: "auto",
-    padding: 10,
+    width: 48,
+    height: 48,
+    padding: 13,
     zIndex: 0.5,
   },
 })
@@ -48,6 +50,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
         styles.container,
         { backgroundColor: colors.card, borderColor: colors.border },
       ]}
+      accessible={false}
+      accessibilityLabel="Task Container"
     >
       <StyledText style={[styles.text, { color: colors.text }]}>
         {task.description}
@@ -57,6 +61,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
         onPress={() => {
           handleEditTask()
         }}
+        accessible={true}
+        accessibilityLabel="Click to edit Task"
+        accessibilityHint="True or False"
       >
         <EditSVG
           width={30}
