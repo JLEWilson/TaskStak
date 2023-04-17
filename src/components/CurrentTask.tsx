@@ -53,9 +53,19 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
   const { colors } = useTheme()
 
   return (
-    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
-      <View style={styles.taskContainer}>
+    <View
+      accessible={false}
+      accessibilityLabel="Component Container"
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+    >
+      <View
+        style={styles.taskContainer}
+        accessible={false}
+        accessibilityLabel="Contains the Task Element"
+      >
         <DivSVG
+          accessible={false}
+          accessibilityLabel="Task Background"
           fill={colors.card}
           stroke={colors.border}
           strokeWidth={5}
@@ -67,8 +77,17 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
           {task.description}
         </StyledText>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => onComplete(task)}>
+      <View
+        style={styles.buttonContainer}
+        accessible={false}
+        accessibilityLabel="Button Positioning"
+      >
+        <TouchableOpacity
+          onPress={() => onComplete(task)}
+          accessible={true}
+          accessibilityLabel="Complete Task"
+          accessibilityHint="Marks the task as complete and either deletes it or moves it back onto the stack"
+        >
           <Button1SVG
             height={100}
             width={150}
@@ -88,7 +107,12 @@ const CurrentTask: React.FC<CurrentTaskProps> = ({
             Complete
           </StyledText>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPass(task)}>
+        <TouchableOpacity
+          onPress={() => onPass(task)}
+          accessible={true}
+          accessibilityLabel="Pass on Task"
+          accessibilityHint="Moves task back onto the stack"
+        >
           <Button2SVG
             height={100}
             width={150}
