@@ -73,13 +73,16 @@ const HomeScreen = () => {
   }
   if (currentTask) {
     return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View
+        style={[styles.container, { backgroundColor: colors.background }]}
+        accessible={false}
+        accessibilityLabel="styling container"
+      >
         <CurrentTask
           task={currentTask}
           onPass={handleTaskPassed}
           onComplete={handleTaskCompleted}
         />
-        <View></View>
       </View>
     )
   } else return <NoTasksMessage />
