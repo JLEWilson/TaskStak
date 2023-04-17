@@ -83,11 +83,17 @@ const TaskList = () => {
     )
   } else {
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        accessible={false}
+        accessibilityLabel="container"
+      >
         <StyledText style={[styles.header, { color: colors.text }]}>
           TaskList
         </StyledText>
         <Modal
+          accessible={false}
+          accessibilityLabel="Modal"
           onBackdropPress={() => handleModalOutsidePress()}
           backdropOpacity={0.3}
           animationIn={"bounceInUp"}
@@ -105,7 +111,11 @@ const TaskList = () => {
             taskToEdit={taskToEdit}
           ></NewTaskForm>
         </Modal>
-        <ScrollView style={styles.taskContainer}>
+        <ScrollView
+          style={styles.taskContainer}
+          accessible={false}
+          accessibilityLabel="scrikk cibtauber"
+        >
           {tasks &&
             tasks.map((task, index) => (
               <TaskItem
@@ -116,7 +126,12 @@ const TaskList = () => {
               />
             ))}
         </ScrollView>
-        <TouchableOpacity style={styles.add} onPress={() => handleNewTaskForm()}>
+        <TouchableOpacity
+          style={styles.add}
+          onPress={() => handleNewTaskForm()}
+          accessible={true}
+          accessibilityLabel="open new task form"
+        >
           <PlusSVG
             width={50}
             height={50}
