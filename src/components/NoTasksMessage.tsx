@@ -20,8 +20,14 @@ const styles = StyleSheet.create({
 const NoTasksMessage = () => {
   const { colors } = useTheme()
   return (
-    <View style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.mainContainer, { backgroundColor: colors.background }]}
+      accessible={false}
+      accessibilityLabel="Positioning container"
+    >
       <DivSVG
+        accessible={true}
+        accessibilityLabel="Background SVG"
         fill={colors.card}
         stroke={colors.border}
         strokeWidth={5}
