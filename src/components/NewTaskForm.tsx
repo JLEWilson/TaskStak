@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: "auto",
-    marginTop: 25,
+    marginTop: 30,
   },
   innerContainer: {
     display: "flex",
@@ -168,10 +168,27 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
   const database = taskToEdit ? updateTask : createTask
   const buttonText = taskToEdit ? "Update Task" : "Create Task"
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Pressable onPress={() => handleFormReset()} style={styles.cancel}>
+    <TouchableWithoutFeedback
+      onPress={() => Keyboard.dismiss()}
+      accessible={true}
+      accessibilityLabel="Returns to Task List"
+      accessibilityHint="Click outside of the Modal as an alternative way to close the form"
+    >
+      <View
+        style={[styles.container, { backgroundColor: colors.background }]}
+        accessible={false}
+        accessibilityLabel="Form Parent"
+      >
+        <Pressable
+          onPress={() => handleFormReset()}
+          style={styles.cancel}
+          accessible={true}
+          accessibilityLabel="Close Form"
+          accessibilityHint="Closes the task form and returns to the task lsit"
+        >
           <CloseSVG
+            accessible={false}
+            accessibilityLabel="svg image"
             width={50}
             height={50}
             stroke={colors.border}
@@ -181,8 +198,16 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           />
         </Pressable>
         {taskToEdit && (
-          <Pressable onPress={() => handleDeleteTask()} style={styles.delete}>
+          <Pressable
+            onPress={() => handleDeleteTask()}
+            style={styles.delete}
+            accessible={true}
+            accessibilityLabel="Delete Task"
+            accessibilityHint="Deletes the Task"
+          >
             <TrashSVG
+              accessible={false}
+              accessibilityLabel="Delete Task SVG"
               fill={colors.primary}
               stroke={colors.border}
               width={50}
@@ -195,12 +220,24 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
         <StyledText style={[styles.header, { color: colors.text }]}>
           Task Details
         </StyledText>
-        <View style={styles.innerContainer}>
-          <View style={{ marginTop: 15 }}>
+        <View
+          style={styles.innerContainer}
+          accessible={false}
+          accessibilityLabel="Task Parameters Container"
+        >
+          <View
+            style={{ marginTop: 15 }}
+            accessible={false}
+            accessibilityLabel="Header Container"
+            accessibilityHint="Marks the task as complete and either deletes it or moves it back onto the stack"
+          >
             <StyledText style={[styles.label, { color: colors.text }]}>
               Description
             </StyledText>
             <TextInput
+              accessible={true}
+              accessibilityLabel="Input for Task Description"
+              accessibilityHint="Enter what you want your task to say"
               style={[
                 styles.textInput,
                 {
@@ -215,30 +252,47 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
               onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
             />
           </View>
-          <View style={styles.propertyContainer}>
+          <View
+            style={styles.propertyContainer}
+            accessible={false}
+            accessibilityLabel="Property Container"
+          >
             <StyledText style={[styles.label, { color: colors.text }]}>
               Priority
             </StyledText>
             <Switch
+              accessible={true}
+              accessibilityLabel="Mark Task As Priority"
+              accessibilityHint="True or False"
               thumbColor={colors.primary}
               trackColor={{ false: colors.notification, true: colors.primary }}
               value={priority}
               onValueChange={(value) => setPriority(value)}
             />
           </View>
-
-          <View style={styles.propertyContainer}>
+          <View
+            style={styles.propertyContainer}
+            accessible={false}
+            accessibilityLabel="Property Container"
+          >
             <StyledText style={[styles.label, { color: colors.text }]}>
               Repeating
             </StyledText>
             <Switch
+              accessible={true}
+              accessibilityLabel="Mark Task as Repeating"
+              accessibilityHint="Select which days the task is to be repeated on"
               thumbColor={colors.primary}
               trackColor={{ false: colors.notification, true: colors.primary }}
               value={isRepeating}
               onValueChange={(value) => setIsRepeating(value)}
             />
           </View>
-          <View style={{ marginTop: 0 }}>
+          <View
+            style={{ marginTop: 0 }}
+            accessible={false}
+            accessibilityLabel="extra view for positioning of element"
+          >
             {isRepeating && (
               <WeekdaySelect
                 setWeekdayFormData={setWeekdays}
@@ -246,11 +300,18 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
               />
             )}
           </View>
-          <View style={styles.propertyContainer}>
+          <View
+            style={styles.propertyContainer}
+            accessible={false}
+            accessibilityLabel="Property Container"
+          >
             <StyledText style={[styles.label, { color: colors.text }]}>
               TimeRange
             </StyledText>
             <Switch
+              accessible={true}
+              accessibilityLabel="Does the task have a time range?"
+              accessibilityHint="True or False to select the time range"
               thumbColor={colors.primary}
               trackColor={{ false: colors.notification, true: colors.primary }}
               value={isTimeRangeVisible}
@@ -270,8 +331,13 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
           <TouchableOpacity
             onPress={() => handleFormSubmit(database, taskToEdit)}
             style={styles.button}
+            accessible={true}
+            accessibilityLabel="Submit"
+            accessibilityHint="Finish editing task and add it onto the stack"
           >
             <Button3SVG
+              accessible={false}
+              accessibilityLabel="Button SVG"
               fill={colors.primary}
               width={250}
               height={60}
