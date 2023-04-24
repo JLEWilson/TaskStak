@@ -8,13 +8,15 @@
 
 - _ReactNative_
 - _AsyncStorage_
-- _Redux_
+- _Redux Toolkit_
 - _Expo_
 - _Expo Go_
 
 ## Description
 
-_a detailed description_
+_TaskStak is a user-friendly weekly to-do list app specifically designed for individuals with ADHD. It simplifies task management by displaying only one task at a time. Users can create tasks for specific days or timeframes, and the app will only show tasks that are relevant to the current time. Additionally, tasks marked as priority will remain visible even after their designated time frame until they are completed, ensuring important tasks are not overlooked._
+
+_TaskStak is designed using AsyncStorage so all data is stored locally so no connection to the internet is required. State is managed using Redux Toolkit._
 
 ## Setup/Installation Requirements
 
