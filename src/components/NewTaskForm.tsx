@@ -249,6 +249,7 @@ const TaskForm: React.FC<TaskForm> = ({ taskToEdit, setModalVisible }) => {
               ]}
               defaultValue={description}
               maxLength={20}
+              onEndEditing={(e) => setDescription(e.nativeEvent.text)}
               onSubmitEditing={(e) => setDescription(e.nativeEvent.text)}
             />
           </View>
